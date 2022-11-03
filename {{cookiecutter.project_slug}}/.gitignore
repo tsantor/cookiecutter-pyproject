@@ -1,0 +1,13 @@
+# System
+*.DS_Store
+
+# Python
+*.pyc
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Editor
+.vscode/

@@ -1,0 +1,9 @@
+{
+    "full_name": "Tim Santor",
+    "email": "tsantor@xstudios.com",
+    "domain": "xstudios.com",
+    "project_name": "Python Package Boilerplate",
+    "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",
+    "project_short_description": "Python Package Boilerplate contains all the boilerplate you need to create a Python package.",
+    "version": "0.1.0"
+}
