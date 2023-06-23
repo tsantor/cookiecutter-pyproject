@@ -3,14 +3,31 @@
 ## Overview
 {{ cookiecutter.project_short_description }}
 
-## Development
+## Features
 
-    make env
-    pip install -e .
+- TODO
 
 ## Installation
 
     pip install git+https://bitbucket.org/xstudios/{{cookiecutter.project_slug}}.git
+
+## Development
+
+    make env
+    make reqs
+    pip install -e .
+
+## Testing
+Project is at **76%** test coverage.
+
+    pytest -v
+    tox
+
+    # Run a specific test
+    pytest -v tests/test_file.py -k method
+
+    # Run coverage
+    pytest --cov-report html --cov-report term --cov=tests/
 
 ## Issues
 

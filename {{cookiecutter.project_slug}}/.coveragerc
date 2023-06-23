@@ -1,0 +1,13 @@
+[run]
+branch = True
+
+[paths]
+source =
+   src
+   .tox/*/site-packages
+
+# [report]
+# skip_covered = true
+
+[html]
+directory = coverage_html_report

@@ -1,9 +1,10 @@
-# Cookiecutter MkDocs
+# Cookiecutter PyProject
+A modern cookiecutter template for creation of new PyPi or internal packages.
 
 ## Features
-
-* Auto Build
-* Auto Deploy
+- Pre-Commit
+- Logging setup
+- Sentry integration
 
 
 ## Quickstart
@@ -13,13 +14,7 @@ Cookiecutter 1.4.0 or higher)::
 
     pip install -U cookiecutter
 
-Generate a Python package project::
+Generate a Python package project:
 
-    cookiecutter https://bitbucket.org/xstudios/cookiecutter-mkdocs.git
-
-
-## Contributing
-As a developer, it is assumed you have `pyenv` and `make` installed.
-
-    make env
+    cookiecutter https://bitbucket.org/tsantor/cookiecutter-pyproject.git
 

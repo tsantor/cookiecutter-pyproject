@@ -10,7 +10,6 @@ classifiers = [
     "Environment :: Console",
     "Intended Audience :: Developers",
     "Natural Language :: English",
-    "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
@@ -20,7 +19,7 @@ classifiers = [
 dependencies = []
 
 dynamic = ["version", "readme"]
-requires-python = ">=3.6"
+requires-python = ">=3.8"
 authors = [{ name = "{{ cookiecutter.full_name }}", email = "{{ cookiecutter.email }}" }]
 
 [project.scripts]
@@ -42,4 +41,4 @@ where = ["src"]
 
 [tool.setuptools.dynamic]
 version = {attr = "{{ cookiecutter.project_slug }}.__version__"}
-readme = {file = ["README.md", "HISTORY.md"]}
+readme = {file = ["README.md", "HISTORY.md"], content-type = "text/markdown"}

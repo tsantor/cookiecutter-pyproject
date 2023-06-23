@@ -17,7 +17,7 @@ help:
 python_version=3.9.11
 venv={{ cookiecutter.project_slug }}_env
 aws_profile=xstudios
-s3_bucket={{ cookiecutter.project_slug }}
+s3_bucket=xstudios-pypi
 
 # -----------------------------------------------------------------------------
 # Environment setup
@@ -27,9 +27,9 @@ env: ## create pyenv virtualenv
 	pyenv virtualenv ${python_version} ${venv} && pyenv local ${venv}
 
 reqs: ## install development requirements
-	python -m pip install -U pip wheel build setuptools \
-		&& python -m pip install -r requirements.txt \
-		&& python -m pip install -r requirements_dev.txt
+	python3 -m pip install -U pip wheel build setuptools \
+		&& python3 -m pip install -r requirements.txt \
+		&& python3 -m pip install -r requirements_dev.txt
 
 destroy_env:  ## destroy pyenv virtualenv
 	pyenv uninstall ${venv}
@@ -59,10 +59,9 @@ clean-pyc: ## remove Python file artifacts
 # -----------------------------------------------------------------------------
 
 dist: clean ## builds source and wheel package
-	python -m build --wheel
-	cp dist/*.whl dist/{{ cookiecutter.project_slug }}-latest-py2.py3-none-any.whl
+	python3 -m build --wheel
 
-release_test: ## upload package to pypi test
+release_test: dist ## upload package to pypi test
 	twine upload dist/* -r pypitest
 
 release: dist ## package and upload a release
@@ -72,6 +71,10 @@ release: dist ## package and upload a release
 # X Studios S3 PyPi
 # -----------------------------------------------------------------------------
 
-push_to_s3:  ## push distro to S3 bucket
-	aws s3 sync --profile=${aws_profile} --acl public-read ./dist/ s3://xstudios-pypi/ \
+create_latest_copy:  dist
+	cp dist/*.whl dist/{{ cookiecutter.project_slug }}-latest-py2.py3-none-any.whl
+
+push_to_s3: create_latest_copy  ## push distro to S3 bucket
+	aws s3 sync --profile=${aws_profile} --acl public-read ./dist/ s3://${s3_bucket}/ \
         --exclude "*" --include "*.whl"
+	echo "https://${s3_bucket}.s3.amazonaws.com/{{ cookiecutter.project_slug }}-latest-py2.py3-none-any.whl"
