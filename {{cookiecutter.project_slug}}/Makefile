@@ -1,3 +1,6 @@
+# -----------------------------------------------------------------------------
+# Generate help output when running just `make`
+# -----------------------------------------------------------------------------
 .DEFAULT_GOAL := help
 
 define PRINT_HELP_PYSCRIPT
@@ -12,47 +15,95 @@ endef
 export PRINT_HELP_PYSCRIPT
 
 help:
-	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
+	@python3 -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
+
+# -----------------------------------------------------------------------------
+# Variables
+# -----------------------------------------------------------------------------
 
 python_version=3.9.11
 venv={{ cookiecutter.project_slug }}_env
 aws_profile=xstudios
 s3_bucket=xstudios-pypi
 
+# START - Generic commands
 # -----------------------------------------------------------------------------
-# Environment setup
+# Environment
 # -----------------------------------------------------------------------------
 
-env: ## create pyenv virtualenv
+env:  ## Create virtual environment
 	pyenv virtualenv ${python_version} ${venv} && pyenv local ${venv}
 
-reqs: ## install development requirements
-	python3 -m pip install -U pip wheel build setuptools \
-		&& python3 -m pip install -r requirements.txt \
-		&& python3 -m pip install -r requirements_dev.txt
-
-destroy_env:  ## destroy pyenv virtualenv
+env_remove:  ## Remove virtual environment
 	pyenv uninstall ${venv}
-	rm -rf ~/.pyenv/versions/${python_version}/envs/${venv}
+
+# -----------------------------------------------------------------------------
+# Pip
+# -----------------------------------------------------------------------------
+
+pip_install:  ## install requirements
+	python3 -m pip install --upgrade pip
+	@for file in $$(ls requirements/*.txt); do \
+			python3 -m pip install -r $$file; \
+	done
+	pre-commit install
+
+pip_list:  ## run pip list
+	python3 -m pip list
+
+pip_freeze:  ## run pipfreezer
+	pipfreezer
+
+pip_checker:  ## run pipchecker
+	python3 manage.py pipchecker
+
+# -----------------------------------------------------------------------------
+# Testing
+# -----------------------------------------------------------------------------
+
+pytest:  ## Run tests
+	pytest -v -x
+
+pytest_verbose:  ## Run tests
+	pytest -vs
+
+coverage:  ## Run tests with coverage
+	coverage run -m pytest && coverage html
+	# pytest --cov=django_project --cov=src --cov-report html -vs
+
+coverage_verbose:  ## Run tests with coverage
+	coverage run -m pytest -vs && coverage html
+
+coverage_skip:  ## Run tests with coverage
+	coverage run -m pytest -vs && coverage html --skip-covered
+
+open_coverage:  ## open coverage report
+	open htmlcov/index.html
 
 # -----------------------------------------------------------------------------
 # Cleanup
 # -----------------------------------------------------------------------------
 
-clean: clean-build clean-pyc ## remove all build, test, coverage and Python artifacts
+clean_build: ## remove build artifacts
+	rm -fr build/ dist/ .eggs/
+	find . -name '*.egg-info' -o -name '*.egg' -exec rm -fr {} +
 
-clean-build: ## remove build artifacts
-	rm -fr build/
-	rm -fr dist/
-	rm -fr .eggs/
-	find . -name '*.egg-info' -exec rm -fr {} +
-	find . -name '*.egg' -exec rm -f {} +
+clean_pyc: ## remove python file artifacts
+	find . \( -name '*.pyc' -o -name '*.pyo' -o -name '*~' -o -name '__pycache__' \) -exec rm -fr {} +
 
-clean-pyc: ## remove Python file artifacts
-	find . -name '*.pyc' -exec rm -f {} +
-	find . -name '*.pyo' -exec rm -f {} +
-	find . -name '*~' -exec rm -f {} +
-	find . -name '__pycache__' -exec rm -fr {} +
+clean: clean_build clean_pyc ## remove all build and python artifacts
+
+clean_pytest_cache:  ## clear pytest cache
+	rm -rf .pytest_cache
+
+clean_tox_cache:  ## clear tox cache
+	rm -rf .tox
+
+clean_coverage:  ## clear coverage cache
+	rm .coverage
+	rm -rf htmlcov
+
+clean_tests: clean_pytest_cache clean_tox_cache clean_coverage  ## clear pytest, tox, and coverage caches
 
 # -----------------------------------------------------------------------------
 # Deploy

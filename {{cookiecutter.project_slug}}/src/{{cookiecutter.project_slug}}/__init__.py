@@ -1,9 +1,12 @@
+{%- if cookicutter.use_sentry == "y" %}
 import sentry_sdk
 
 from {{ cookiecutter.project_slug }}.settings import SENTRY_DSN
+{%- endif %}
 
 __version__ = "0.1.0"
 
+{%- if cookicutter.use_sentry == "y" %}
 if SENTRY_DSN:
     sentry_sdk.init(
         dsn=SENTRY_DSN,
@@ -12,3 +15,4 @@ if SENTRY_DSN:
         # We recommend adjusting this value in production.
         traces_sample_rate=1.0,
     )
+{%- endif %}
