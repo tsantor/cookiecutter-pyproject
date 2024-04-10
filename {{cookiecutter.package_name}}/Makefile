@@ -35,7 +35,7 @@ env:  ## Create virtual environment
 	pyenv virtualenv ${python_version} ${venv} && pyenv local ${venv}
 
 env_remove:  ## Remove virtual environment
-	pyenv uninstall ${venv}
+	pyenv uninstall -f ${venv}
 
 # -----------------------------------------------------------------------------
 # Pip

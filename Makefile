@@ -33,7 +33,6 @@ BAKE_OPTIONS=--no-input
 env:  ## Install virtualenv for development
 	pyenv virtualenv ${python_version} ${venv} && pyenv local ${venv}
 	python3 -m pip install -U pip -r requirements_dev.txt
-	pre-commit install
 
 env_remove:  ## Remove virtual environment
 	pyenv uninstall -f ${venv}
