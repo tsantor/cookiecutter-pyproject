@@ -1,9 +1,11 @@
+# https://packaging.python.org/en/latest/guides/writing-pyproject-toml/
+
 [build-system]
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "{{ cookiecutter.project_name }}"
+name = "{{ cookiecutter.package_name }}"
 description = "{{ cookiecutter.project_short_description }}"
 classifiers = [
   "Development Status :: 5 - Production/Stable",
@@ -23,6 +25,13 @@ requires-python = ">=3.8"
 authors = [
   { name = "{{ cookiecutter.full_name }}", email = "{{ cookiecutter.email }}" },
 ]
+
+[project.urls]
+# Homepage = "https://{{ cookiecutter.domain }}"
+# Documentation = "https://readthedocs.org//{{ cookiecutter.package_name }}"
+Repository = "https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.package_name }}.git"
+Issues = "https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.package_name }}/issues"
+Changelog = "https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.package_name }}/blob/master/HISTORY.md"
 
 [project.scripts]
 {{ cookiecutter.project_slug }} = "{{ cookiecutter.project_slug }}.cli:run"

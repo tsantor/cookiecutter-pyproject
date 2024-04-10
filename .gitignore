@@ -1,3 +1,5 @@
 .DS_Store
-mkdocs_boilerplate/
 .python-version
+node_modules/
+
+python-package-boilerplate/

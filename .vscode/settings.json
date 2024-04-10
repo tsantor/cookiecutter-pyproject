@@ -1,10 +1,9 @@
 {
-    "python.linting.flake8Enabled": true,
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.formatOnSave": true,
-    "python.formatting.provider": "black",
-    "[python]": {
-        "editor.codeActionsOnSave": {
-          "source.organizeImports": "explicit"
-        }
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
     }
   }
+}

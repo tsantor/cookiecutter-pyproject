@@ -1,0 +1,7 @@
+twine
+wheel
+build
+pre-commit
+
+# X Studios
+pip-freezer

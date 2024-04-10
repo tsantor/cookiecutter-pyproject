@@ -43,5 +43,7 @@ if not LOG_FILE.exists():
 config = configparser.ConfigParser()
 config.read(CONFIG_FILE)
 
+{%- if cookiecutter.use_sentry == "y" %}
 # Default
 SENTRY_DSN = config.get("default", "sentry_dsn", fallback=None)
+{%- endif %}

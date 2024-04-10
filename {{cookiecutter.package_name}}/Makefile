@@ -22,7 +22,7 @@ help:
 # -----------------------------------------------------------------------------
 
 python_version=3.9.11
-venv={{ cookiecutter.project_slug }}_env
+venv={{ cookiecutter.package_name }}_env
 aws_profile=xstudios
 s3_bucket=xstudios-pypi
 
@@ -41,20 +41,23 @@ env_remove:  ## Remove virtual environment
 # Pip
 # -----------------------------------------------------------------------------
 
-pip_install:  ## install requirements
+pip_install:  ## Install requirements
 	python3 -m pip install --upgrade pip
 	@for file in $$(ls requirements/*.txt); do \
 			python3 -m pip install -r $$file; \
 	done
 	pre-commit install
 
-pip_list:  ## run pip list
+pip_editable_install:	## Install in editable mode
+	python3 -m pip install -e .
+
+pip_list:  ## Run pip list
 	python3 -m pip list
 
-pip_freeze:  ## run pipfreezer
+pip_freeze:  ## Run pipfreezer
 	pipfreezer
 
-pip_checker:  ## run pipchecker
+pip_checker:  ## Run pipchecker
 	python3 manage.py pipchecker
 
 # -----------------------------------------------------------------------------
@@ -64,68 +67,83 @@ pip_checker:  ## run pipchecker
 pytest:  ## Run tests
 	pytest -v -x
 
-pytest_verbose:  ## Run tests
+pytest_verbose:  ## Run tests in verbose mode
 	pytest -vs
 
 coverage:  ## Run tests with coverage
 	coverage run -m pytest && coverage html
 	# pytest --cov=django_project --cov=src --cov-report html -vs
 
-coverage_verbose:  ## Run tests with coverage
+coverage_verbose:  ## Run tests with coverage in verbose mode
 	coverage run -m pytest -vs && coverage html
 
-coverage_skip:  ## Run tests with coverage
+coverage_skip:  ## Run tests with coverage and skip covered
 	coverage run -m pytest -vs && coverage html --skip-covered
 
-open_coverage:  ## open coverage report
+open_coverage:  ## Open coverage report
 	open htmlcov/index.html
 
 # -----------------------------------------------------------------------------
 # Cleanup
 # -----------------------------------------------------------------------------
 
-clean_build: ## remove build artifacts
+clean_build: ## Remove build artifacts
 	rm -fr build/ dist/ .eggs/
 	find . -name '*.egg-info' -o -name '*.egg' -exec rm -fr {} +
 
-clean_pyc: ## remove python file artifacts
+clean_pyc: ## Remove python file artifacts
 	find . \( -name '*.pyc' -o -name '*.pyo' -o -name '*~' -o -name '__pycache__' \) -exec rm -fr {} +
 
-clean: clean_build clean_pyc ## remove all build and python artifacts
+clean: clean_build clean_pyc ## Remove all build and python artifacts
 
-clean_pytest_cache:  ## clear pytest cache
+clean_pytest_cache:  ## Clear pytest cache
 	rm -rf .pytest_cache
 
-clean_tox_cache:  ## clear tox cache
+clean_ruff_cache:  ## Clear ruff cache
+	rm -rf .ruff_cache
+
+clean_tox_cache:  ## Clear tox cache
 	rm -rf .tox
 
-clean_coverage:  ## clear coverage cache
+clean_coverage:  ## Clear coverage cache
 	rm .coverage
 	rm -rf htmlcov
 
-clean_tests: clean_pytest_cache clean_tox_cache clean_coverage  ## clear pytest, tox, and coverage caches
+clean_tests: clean_pytest_cache clean_ruff_cache clean_tox_cache clean_coverage  ## Clear pytest, ruff, tox, and coverage caches
 
 # -----------------------------------------------------------------------------
 # Deploy
 # -----------------------------------------------------------------------------
 
-dist: clean ## builds source and wheel package
+dist: clean ## Builds source and wheel package
 	python3 -m build --wheel
 
-release_test: dist ## upload package to pypi test
+release_test: dist ## Upload package to pypi test
 	twine upload dist/* -r pypitest
 
-release: dist ## package and upload a release
+release: dist ## Package and upload a release
 	twine upload dist/*
+
+check: dist ## Twine check
+	twine check dist/*
 
 # -----------------------------------------------------------------------------
 # X Studios S3 PyPi
 # -----------------------------------------------------------------------------
 
-create_latest_copy:  dist
-	cp dist/*.whl dist/{{ cookiecutter.project_slug }}-latest-py2.py3-none-any.whl
+create_latest_copy:  dist  ## Create a copy of the latest wheel
+	cp dist/*.whl dist/{{ cookiecutter.project_slug }}-latest-py3-none-any.whl
 
-push_to_s3: create_latest_copy  ## push distro to S3 bucket
+push_to_s3: create_latest_copy  ## Push distro to S3 bucket
 	aws s3 sync --profile=${aws_profile} --acl public-read ./dist/ s3://${s3_bucket}/ \
         --exclude "*" --include "*.whl"
-	echo "https://${s3_bucket}.s3.amazonaws.com/{{ cookiecutter.project_slug }}-latest-py2.py3-none-any.whl"
+	echo "https://${s3_bucket}.s3.amazonaws.com/{{ cookiecutter.project_slug }}-latest-py3-none-any.whl"
+
+# -----------------------------------------------------------------------------
+# END - Generic commands
+
+# -----------------------------------------------------------------------------
+# Project specific commands
+# -----------------------------------------------------------------------------
+
+# Your commands here
