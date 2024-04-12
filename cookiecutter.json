@@ -1,11 +1,11 @@
 {
-  "full_name": "Tim Santor",
-  "email": "tsantor@xstudios.com",
-  "domain": "xstudios.com",
   "project_name": "Python Package Boilerplate",
   "package_name": "{{ cookiecutter.project_name.lower().replace(' ', '-') }}",
   "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",
   "project_short_description": "Python Package Boilerplate contains all the boilerplate you need to create a Python package.",
+  "author_name": "Tim Santor",
+  "email": "tsantor@xstudios.com",
+  "domain_name": "xstudios.com",
   "version": "0.1.0",
   "github_username": "tsantor",
   "use_sentry": "n"

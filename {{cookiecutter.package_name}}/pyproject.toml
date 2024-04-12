@@ -23,11 +23,11 @@ dependencies = []
 dynamic = ["version", "readme"]
 requires-python = ">=3.8"
 authors = [
-  { name = "{{ cookiecutter.full_name }}", email = "{{ cookiecutter.email }}" },
+  { name = "{{ cookiecutter.author_name }}", email = "{{ cookiecutter.email }}" },
 ]
 
 [project.urls]
-# Homepage = "https://{{ cookiecutter.domain }}"
+# Homepage = "https://{{ cookiecutter.domain_name }}"
 # Documentation = "https://readthedocs.org//{{ cookiecutter.package_name }}"
 Repository = "https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.package_name }}.git"
 Issues = "https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.package_name }}/issues"
@@ -62,6 +62,12 @@ pythonpath = "src"
 include = ["*/{{cookiecutter.project_slug}}/**/*.py"]
 omit = ["*/migrations/*", "*/tests/*"]
 # plugins = ["django_coverage_plugin"]
+
+[tool.coverage.report]
+exclude_also = [
+  "def __repr__",
+  # "def __str__",
+]
 
 # ==== mypy ====
 [tool.mypy]

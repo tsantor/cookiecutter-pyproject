@@ -1,5 +1,8 @@
 # {{ cookiecutter.project_name }}
 
+![Coverage](https://img.shields.io/badge/coverage-0%25-brightgreen)
+<!-- ![Code Style](https://img.shields.io/badge/code_style-ruff-black) -->
+
 ## Overview
 
 {{ cookiecutter.project_short_description }}
@@ -11,7 +14,7 @@
 python3 -m pip install {{cookiecutter.package_name}}
 
 # From source
-python3 -m pip install git+https://bitbucket.org/xstudios/{{cookiecutter.package_name}}.git
+python3 -m pip install git+https://github.org/{{cookiecutter.github_username}}/{{cookiecutter.package_name}}.git
 ```
 
 ## Development
@@ -19,7 +22,7 @@ python3 -m pip install git+https://bitbucket.org/xstudios/{{cookiecutter.package
 ```bash
 make env
 make pip_install
-make pip_editable_install
+make pip_install_editable
 ```
 
 ## Testing
@@ -32,4 +35,4 @@ make open_coverage
 
 ## Issues
 
-If you experience any issues, please create an [issue](https://bitbucket.org/xstudios/{{cookiecutter.package_name}}/issues) on Bitbucket.
+If you experience any issues, please create an [issue](https://github.org/{{cookiecutter.github_username}}/{{cookiecutter.package_name}}/issues) on Github.

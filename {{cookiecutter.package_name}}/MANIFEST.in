@@ -2,8 +2,7 @@ include AUTHORS.md
 include HISTORY.md
 include README.md
 
-include requirements.txt
-include requirements_*.txt
+recursive-include requirements/ *.txt
 
 recursive-include src/{{ cookiecutter.project_slug }}/data/ *.cfg
 # recursive-include src/{{ cookiecutter.project_slug }}/data/ *.ps1

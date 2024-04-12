@@ -27,12 +27,6 @@ repos:
         args: ['--tab-width', '2', '--single-quote']
         exclude: 'src/{{cookiecutter.project_slug}}/templates/'
 
-  - repo: https://github.com/adamchainz/django-upgrade
-    rev: '1.16.0'
-    hooks:
-      - id: django-upgrade
-        args: ['--target-version', '4.2']
-
   # Run the Ruff linter.
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.3.2
@@ -42,12 +36,6 @@ repos:
         args: [--fix, --exit-non-zero-on-fix]
       # Formatter
       - id: ruff-format
-
-  - repo: https://github.com/Riverside-Healthcare/djLint
-    rev: v1.34.1
-    hooks:
-      - id: djlint-reformat-django
-      - id: djlint-django
 
 # sets up .pre-commit-ci.yaml to ensure pre-commit dependencies stay up to date
 ci:
