@@ -1,10 +1,10 @@
 # Testing
 # ------------------------------------------------------------------------------
 pytest
+pytest-mock
 
 # Code quality
 # ------------------------------------------------------------------------------
 ruff  # https://github.com/astral-sh/ruff
 coverage  # https://github.com/nedbat/coveragepy
-djlint  # https://github.com/Riverside-Healthcare/djLint
 pre-commit  # https://github.com/pre-commit/pre-commit

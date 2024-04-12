@@ -30,12 +30,14 @@ BAKE_OPTIONS=--no-input
 # Environment
 # -----------------------------------------------------------------------------
 
-env:  ## Install virtualenv for development
+env:  ## Install virtualenv for development (uses `pyenv`)
 	pyenv virtualenv ${python_version} ${venv} && pyenv local ${venv}
 	python3 -m pip install -U pip -r requirements_dev.txt
 
 env_remove:  ## Remove virtual environment
 	pyenv uninstall -f ${venv}
+
+env_from_scratch: env_remove env  ## Create environment from scratch
 
 # -----------------------------------------------------------------------------
 # Cookiecutter
@@ -45,7 +47,7 @@ bake:  ## Generate project using defaults
 	cookiecutter $(BAKE_OPTIONS) . --overwrite-if-exists
 
 watch: bake  ## Generate project using defaults and watch for changes
-	watchmedo shell-command -p '*.*' -c 'make bake -e BAKE_OPTIONS=$(BAKE_OPTIONS)' -W -R -D \{{cookiecutter.project_slug}}/
+	watchmedo shell-command -p '*.*' -c 'make bake -e BAKE_OPTIONS=$(BAKE_OPTIONS)' -W -R -D \{{cookiecutter.package_name}}/
 
 replay: BAKE_OPTIONS=--replay  # Replay last cookiecutter run and watch for changes
 replay: watch

@@ -1,11 +1,10 @@
-pytest
-tox
 cookiecutter
-pytest-cookies
-alabaster
-watchdog[watchmedo]
-ruff
 pre-commit
+pytest
+pytest-cookies
+ruff
+tox
+watchdog[watchmedo]
 
 # X Studios
 pip-freezer
