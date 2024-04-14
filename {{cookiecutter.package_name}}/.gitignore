@@ -17,3 +17,6 @@ dist/
 .coverage
 .python-version
 htmlcov/
+
+.ruff_cache/
+node_modules/

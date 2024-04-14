@@ -20,7 +20,7 @@ python3 -m pip install -U cookiecutter
 Generate a Python package project:
 
 ```bash
-cookiecutter https://bitbucket.org/tsantor/cookiecutter-pyproject.git
+cookiecutter https://github.com/tsantor/cookiecutter-pyproject.git
 ```
 
 ## Development

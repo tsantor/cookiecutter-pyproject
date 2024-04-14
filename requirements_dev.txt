@@ -1,9 +1,6 @@
 cookiecutter
-pre-commit
 pytest
-pytest-cookies
 ruff
-tox
 watchdog[watchmedo]
 
 # X Studios

@@ -86,6 +86,19 @@ open_coverage:  ## Open coverage report
 	open htmlcov/index.html
 
 # -----------------------------------------------------------------------------
+# Ruff
+# -----------------------------------------------------------------------------
+
+ruff_format: ## Run ruff format
+	ruff format src/{{cookiecutter.project_slug}}
+
+ruff_check: ## Run ruff check
+	ruff check src/{{cookiecutter.project_slug}}
+
+ruff_clean: ## Run ruff clean
+	ruff clean
+
+# -----------------------------------------------------------------------------
 # Cleanup
 # -----------------------------------------------------------------------------
 
