@@ -1,10 +1,11 @@
 # Testing
 # ------------------------------------------------------------------------------
-pytest
-pytest-mock
+pytest  # https://github.com/pytest-dev/pytest
+pytest-mock  # https://github.com/pytest-dev/pytest-mock
 
 # Code quality
 # ------------------------------------------------------------------------------
 ruff  # https://github.com/astral-sh/ruff
 coverage  # https://github.com/nedbat/coveragepy
+pre-commit  # https://github.com/pre-commit/pre-commit
 pre-commit  # https://github.com/pre-commit/pre-commit
