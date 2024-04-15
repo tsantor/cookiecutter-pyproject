@@ -25,7 +25,7 @@ repos:
     hooks:
       - id: prettier
         args: ['--tab-width', '2', '--single-quote']
-        exclude: 'src/{{cookiecutter.project_slug}}/templates/|node_modules/'
+        exclude: 'src/{{cookiecutter.package_dir}}/templates/|node_modules/'
 
   # Run the Ruff linter.
   - repo: https://github.com/astral-sh/ruff-pre-commit

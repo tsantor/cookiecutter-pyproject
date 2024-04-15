@@ -90,10 +90,10 @@ open_coverage:  ## Open coverage report
 # -----------------------------------------------------------------------------
 
 ruff_format: ## Run ruff format
-	ruff format src/{{cookiecutter.project_slug}}
+	ruff format src/{{cookiecutter.package_dir}}
 
 ruff_check: ## Run ruff check
-	ruff check src/{{cookiecutter.project_slug}}
+	ruff check src/{{cookiecutter.package_dir}}
 
 ruff_clean: ## Run ruff clean
 	ruff clean

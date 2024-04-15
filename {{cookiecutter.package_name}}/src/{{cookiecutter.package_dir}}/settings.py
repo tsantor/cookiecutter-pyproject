@@ -19,20 +19,20 @@ def copy_file(filename, dst):
 
     # Copy data file to destination
     src = pkg_resources.resource_filename(
-        "{{cookiecutter.project_slug}}", f"data/{filename}"
+        "{{cookiecutter.package_dir}}", f"data/{filename}"
     )
     dst = str(Path(dir_path).expanduser())
     shutil.copy2(src, dst)
 
 
 CONFIG_FILE = Path(
-    "~/.{{cookiecutter.project_slug}}/{{cookiecutter.project_slug}}.cfg"
+    "~/.{{cookiecutter.package_name}}/{{cookiecutter.package_name}}.cfg"
 ).expanduser()
 if not CONFIG_FILE.exists():
-    copy_file("{{cookiecutter.project_slug}}.cfg", str(CONFIG_FILE))
+    copy_file("{{cookiecutter.package_name}}.cfg", str(CONFIG_FILE))
 
 LOG_FILE = Path(
-    "~/.{{cookiecutter.project_slug}}/{{cookiecutter.project_slug}}.log"
+    "~/.{{cookiecutter.package_name}}/{{cookiecutter.package_name}}.log"
 ).expanduser()
 if not LOG_FILE.exists():
     LOG_FILE.touch()

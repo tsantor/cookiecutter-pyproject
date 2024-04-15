@@ -34,7 +34,7 @@ Issues = "https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.
 Changelog = "https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.package_name }}/blob/master/HISTORY.md"
 
 [project.scripts]
-{{ cookiecutter.project_slug }} = "{{ cookiecutter.project_slug }}.cli:run"
+{{ cookiecutter.package_dir }} = "{{ cookiecutter.package_dir }}.cli:run"
 
 [project.optional-dependencies]
 dev = []
@@ -44,7 +44,7 @@ dev = []
 where = ["src"]
 
 [tool.setuptools.dynamic]
-version = { attr = "{{ cookiecutter.project_slug }}.__version__" }
+version = { attr = "{{ cookiecutter.package_dir }}.__version__" }
 readme = { file = ["README.md", "HISTORY.md"], content-type = "text/markdown" }
 
 
@@ -59,7 +59,7 @@ pythonpath = "src"
 
 # ==== Coverage ====
 [tool.coverage.run]
-include = ["*/{{cookiecutter.project_slug}}/**/*.py"]
+include = ["*/{{cookiecutter.package_dir}}/**/*.py"]
 omit = ["*/migrations/*", "*/tests/*"]
 # plugins = ["django_coverage_plugin"]
 

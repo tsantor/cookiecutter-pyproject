@@ -1,7 +1,7 @@
 {%- if cookiecutter.use_sentry == "y" -%}
 import sentry_sdk
 
-from {{ cookiecutter.project_slug }}.settings import SENTRY_DSN
+from {{ cookiecutter.package_dir }}.settings import SENTRY_DSN
 {%- endif -%}
 __version__ = "0.1.0"
 

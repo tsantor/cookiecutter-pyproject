@@ -4,5 +4,5 @@ include README.md
 
 recursive-include requirements/ *.txt
 
-recursive-include src/{{ cookiecutter.project_slug }}/data/ *.cfg
-# recursive-include src/{{ cookiecutter.project_slug }}/data/ *.ps1
+recursive-include src/{{ cookiecutter.package_dir }}/data/ *.cfg
+# recursive-include src/{{ cookiecutter.package_dir }}/data/ *.ps1
