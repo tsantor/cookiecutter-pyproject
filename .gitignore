@@ -1,5 +1,6 @@
 .DS_Store
 .python-version
 node_modules/
+.coverage
 
 my-awesome-package/
