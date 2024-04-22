@@ -34,11 +34,15 @@ s3_bucket=xstudios-pypi
 
 env:  ## Create virtual environment (uses `pyenv`)
 	pyenv virtualenv ${python_version} ${venv} && pyenv local ${venv}
+	python3 -m pip install -U pip
 
 env_remove:  ## Remove virtual environment
 	pyenv uninstall -f ${venv}
 
 env_from_scratch: env_remove env pip_install pip_install_editable  ## Create environment from scratch
+
+pyenv_rehash:	## Rehash pyenv
+	pyenv rehash
 
 # -----------------------------------------------------------------------------
 # Pip
@@ -49,10 +53,11 @@ pip_install:  ## Install requirements
 	@for file in $$(ls requirements/*.txt); do \
 			python3 -m pip install -r $$file; \
 	done
-	pre-commit install
+	# pre-commit install
 
 pip_install_editable:  ## Install in editable mode
 	python3 -m pip install -e .
+	pyenv_rehash
 
 pip_list:  ## Run pip list
 	python3 -m pip list

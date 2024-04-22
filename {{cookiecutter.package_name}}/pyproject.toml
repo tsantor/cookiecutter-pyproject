@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "{{ cookiecutter.package_name }}"
-description = "{{ cookiecutter.project_short_description }}"
+description = "{{ cookiecutter.description }}"
 classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Environment :: Console",
@@ -18,7 +18,11 @@ classifiers = [
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
 ]
-dependencies = []
+dependencies = [
+  {%- if cookiecutter.has_cli == "y" %}
+  "click",
+  {%- endif %}
+]
 
 dynamic = ["version", "readme"]
 requires-python = ">=3.8"
@@ -32,9 +36,11 @@ authors = [
 Repository = "https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.package_name }}.git"
 Issues = "https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.package_name }}/issues"
 Changelog = "https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.package_name }}/blob/master/HISTORY.md"
+{%- if cookiecutter.has_cli == "y" %}
 
 [project.scripts]
-{{ cookiecutter.package_dir }} = "{{ cookiecutter.package_dir }}.cli:run"
+{{ cookiecutter.package_name }} = "{{ cookiecutter.package_dir }}.cli:run"
+{%- endif %}
 
 [project.optional-dependencies]
 dev = []
@@ -46,7 +52,6 @@ where = ["src"]
 [tool.setuptools.dynamic]
 version = { attr = "{{ cookiecutter.package_dir }}.__version__" }
 readme = { file = ["README.md", "HISTORY.md"], content-type = "text/markdown" }
-
 
 # ==== pytest ====
 [tool.pytest.ini_options]
@@ -61,7 +66,7 @@ pythonpath = "src"
 [tool.coverage.run]
 include = ["*/{{cookiecutter.package_dir}}/**/*.py"]
 omit = ["*/migrations/*", "*/tests/*"]
-# plugins = ["django_coverage_plugin"]
+# plugins = []
 
 [tool.coverage.report]
 exclude_also = [
@@ -77,7 +82,7 @@ ignore_missing_imports = true
 warn_unused_ignores = true
 warn_redundant_casts = true
 warn_unused_configs = true
-# plugins = ["mypy_django_plugin.main", "mypy_drf_plugin.main"]
+# plugins = []
 
 [[tool.mypy.overrides]]
 # Django migrations should not produce any errors:

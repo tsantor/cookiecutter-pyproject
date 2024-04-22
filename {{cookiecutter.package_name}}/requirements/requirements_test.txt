@@ -8,4 +8,3 @@ pytest-mock  # https://github.com/pytest-dev/pytest-mock
 ruff  # https://github.com/astral-sh/ruff
 coverage  # https://github.com/nedbat/coveragepy
 pre-commit  # https://github.com/pre-commit/pre-commit
-pre-commit  # https://github.com/pre-commit/pre-commit

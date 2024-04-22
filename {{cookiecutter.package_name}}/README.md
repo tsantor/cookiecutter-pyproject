@@ -5,7 +5,7 @@
 
 ## Overview
 
-{{ cookiecutter.project_short_description }}
+{{ cookiecutter.description }}
 
 ## Installation
 
@@ -14,7 +14,7 @@
 python3 -m pip install {{cookiecutter.package_name}}
 
 # From source
-python3 -m pip install git+https://github.org/{{cookiecutter.github_username}}/{{cookiecutter.package_name}}.git
+python3 -m pip install git+https://githubc.org/{{cookiecutter.github_username}}/{{cookiecutter.package_name}}.git
 ```
 
 ## Development
@@ -35,4 +35,8 @@ make open_coverage
 
 ## Issues
 
-If you experience any issues, please create an [issue](https://github.org/{{cookiecutter.github_username}}/{{cookiecutter.package_name}}/issues) on Github.
+If you experience any issues, please create an [issue](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.package_name}}/issues) on Github.
+
+
+## Not Exactly What You Want?
+This is what I want. _It might not be what you want_. If you have differences in your preferred setup, I encourage you to fork this to create your own version.

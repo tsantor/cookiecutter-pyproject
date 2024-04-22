@@ -1,7 +1,19 @@
+binaryornot
 cookiecutter
-pytest
-ruff
+sh
 watchdog[watchmedo]
 
+# Code quality
+# ------------------------------------------------------------------------------
+ruff
+pre-commit
+coverage
+
+# Testing
+# ------------------------------------------------------------------------------
+pytest
+pytest-cookies
+
 # X Studios
+# ------------------------------------------------------------------------------
 pip-freezer
