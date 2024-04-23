@@ -1,9 +1,11 @@
 import logging
+from pathlib import Path
 
-import click  # https://click.palletsprojects.com/
+import click
 
 from . import settings
 from .logging import setup_logging
+from .utils import home_agnostic_path
 
 logger = logging.getLogger(__name__)
 
@@ -34,12 +36,16 @@ def run(path, verbose) -> None:
         click.echo = silent_echo
 
     setup_logging(verbose, settings.LOG_FILE)
-    click.echo(f"Hello, World! Path: {path}")
+
+    path = Path(path).expanduser()
+
+    click.echo("Hello, World!")
+    click.echo(f"Path: {home_agnostic_path(path)}")
 
 
 # Set up your command-line interface grouping
 @click.group()
-@click.version_option()
+@click.version_option(package_name="{{cookiecutter.package_dir}}")
 def cli():
     """{{cookiecutter.description}}"""
 

@@ -27,7 +27,7 @@ def main():
 
     # TODO: Maybe test for invalid options here in future
 
-    print(SUCCESS + "Pre-gen OK!" + TERMINATOR)
+    # print(SUCCESS + "Pre-gen OK!" + TERMINATOR)
 
 
 if __name__ == "__main__":

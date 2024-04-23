@@ -17,33 +17,36 @@ DEBUG_VALUE = "debug"
 
 
 def remove_open_source_files():
+    """Remove open source files from generated project."""
     file_names = ["CONTRIBUTORS.txt", "LICENSE"]
     for file_name in file_names:
-        (PROJECT_DIRECTORY / file_name).unlink(missing_ok=True)
+        Path(file_name).unlink()
 
 
 def remove_gplv3_files():
+    """Remove GPL v3 files from generated project."""
     file_names = ["COPYING"]
     for file_name in file_names:
-        Path(file_name).unlink(missing_ok=True)
+        Path(file_name).unlink()
 
 
 def remove_cli():
-    (PROJECT_DIRECTORY / "src" / "{{cookiecutter.package_dir}}" / "cli.py").unlink(
-        missing_ok=True
-    )
+    """Remove CLI file from generated project."""
+    Path("src" / "{{cookiecutter.package_dir}}" / "cli.py").unlink()
 
 
 def remove_file(filepath):
     """Remove file from generated project."""
-    (PROJECT_DIRECTORY / filepath).unlink(missing_ok=True)
+    Path(filepath).unlink()
 
 
 # -----------------------------------------------------------------------------
 # Main
 # -----------------------------------------------------------------------------
+
+
 def main():
-    # print(PROJECT_DIRECTORY)
+    """Main entry point."""
 
     if "{{ cookiecutter.open_source_license }}" == "Not open source":
         remove_open_source_files()

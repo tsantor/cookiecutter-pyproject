@@ -1,19 +1,19 @@
-binaryornot
-cookiecutter
-sh
-watchdog[watchmedo]
+binaryornot==0.4.4
+cookiecutter==2.6.0
+sh==2.0.6
+watchdog[watchmedo]==4.0.0
 
 # Code quality
 # ------------------------------------------------------------------------------
-ruff
-pre-commit
-coverage
+ruff==0.4.1
+pre-commit==3.7.0
+coverage==7.4.4
 
 # Testing
 # ------------------------------------------------------------------------------
-pytest
-pytest-cookies
+pytest==8.1.1
+pytest-cookies==0.7.0
 
 # X Studios
 # ------------------------------------------------------------------------------
-pip-freezer
+pip-freezer==0.3.7

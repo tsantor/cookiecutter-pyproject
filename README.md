@@ -1,23 +1,23 @@
 # Cookiecutter PyProject
 
-A modern cookiecutter template for creation of new PyPi or internal packages.
+A modern cookiecutter template for creation of a Python package.
 
 ## Features
 
 - Pre-Commit
 - Logging setup
-- Sentry integration
+- Sentry integration (optional)
+- Click integration (optional)
 
 ## Quickstart
 
-Install the latest Cookiecutter if you haven't installed it yet (this requires
-Cookiecutter 1.4.0 or higher)::
+Install Cookiecutter, if you don't already have it:
 
 ```bash
 python3 -m pip install -U cookiecutter
 ```
 
-Generate a Python package project:
+Generate a Python package:
 
 ```bash
 cookiecutter https://github.com/tsantor/cookiecutter-pyproject.git
@@ -27,6 +27,7 @@ cookiecutter https://github.com/tsantor/cookiecutter-pyproject.git
 
 ```bash
 make env
+make pytest
 ```
 
 ## Basic Commands
