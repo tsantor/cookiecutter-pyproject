@@ -1,9 +1,9 @@
-import configparser
 import logging
 import shutil
 from pathlib import Path
 
 import pkg_resources
+import toml
 
 logger = logging.getLogger(__name__)
 
@@ -24,27 +24,23 @@ def copy_resource_file(filename, dst):
 
 
 CONFIG_FILE = Path(
-    "~/.{{cookiecutter.package_name}}/{{cookiecutter.package_name}}.cfg"
+    "~/.{{cookiecutter.package_name}}/{{cookiecutter.package_name}}.toml"
 ).expanduser()
 if not CONFIG_FILE.exists():
-    copy_resource_file("{{cookiecutter.package_name}}.cfg", str(CONFIG_FILE))
+    copy_resource_file("{{cookiecutter.package_name}}.toml", str(CONFIG_FILE))  # pragma: no cover
 
 LOG_FILE = Path(
     "~/.{{cookiecutter.package_name}}/{{cookiecutter.package_name}}.log"
 ).expanduser()
 if not LOG_FILE.exists():
-    LOG_FILE.touch()
+    LOG_FILE.touch()  # pragma: no cover
 
 # -----------------------------------------------------------------------------
 
-def get_config_value_as_list(config: configparser.ConfigParser, section: str, key: str) -> list[str]:
-    data_string = config[section][key]
-    return [item.strip() for item in data_string.split(",")]
-
-config = configparser.ConfigParser()
-config.read(CONFIG_FILE)
+with CONFIG_FILE.open("r") as f:
+    config = toml.load(f)
 
 {%- if cookiecutter.use_sentry == "y" %}
-# Default
-SENTRY_DSN = config.get("default", "sentry_dsn", fallback=None)
+SENTRY_DSN = config["default"]["sentry_dsn"]
 {%- endif %}
+FOO = config["default"]["foo"]

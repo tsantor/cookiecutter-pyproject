@@ -1,5 +1,6 @@
 [default]
 {%- if cookiecutter.use_sentry == "y" -%}
-sentry_dsn =
+# Sentry DSN for error tracking
+sentry_dsn = ""
 {%- endif %}
-foo=bar
+foo = "bar"
