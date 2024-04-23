@@ -1,13 +1,18 @@
 # Cookiecutter PyProject
 
-A modern cookiecutter template for creation of a Python package.
+A modern cookiecutter template for creation of a Python package following best practices.
 
 ## Features
+The resulting generated Python package features:
 
-- Pre-Commit
-- Logging setup
-- Sentry integration (optional)
-- Click integration (optional)
+- `pyproject.toml`
+- `ruff` for formatting/linting
+- `pytest` and `coverage` for running tests
+- `pre-commit` to enforce formatting/linting before committing
+- `click` (optional if making a CLI app)
+- `sentry-sdk` for error reporting (optional)
+- `twine` for publishing to PyPI
+- `Makefile` with common development related commands
 
 ## Quickstart
 
@@ -30,6 +35,4 @@ make env
 make pytest
 ```
 
-## Basic Commands
-
-Run `make` to view a list of available commands.
+Run `make` to view a list of available commands with descriptions.

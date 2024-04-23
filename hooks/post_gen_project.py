@@ -20,24 +20,24 @@ def remove_open_source_files():
     """Remove open source files from generated project."""
     file_names = ["CONTRIBUTORS.txt", "LICENSE"]
     for file_name in file_names:
-        Path(file_name).unlink()
+        Path(PROJECT_DIRECTORY / file_name).unlink()
 
 
 def remove_gplv3_files():
     """Remove GPL v3 files from generated project."""
     file_names = ["COPYING"]
     for file_name in file_names:
-        Path(file_name).unlink()
+        Path(PROJECT_DIRECTORY / file_name).unlink()
 
 
 def remove_cli():
     """Remove CLI file from generated project."""
-    Path("src" / "{{cookiecutter.package_dir}}" / "cli.py").unlink()
+    Path(PROJECT_DIRECTORY / "src" / "{{cookiecutter.package_dir}}" / "cli.py").unlink()
 
 
 def remove_file(filepath):
     """Remove file from generated project."""
-    Path(filepath).unlink()
+    Path(PROJECT_DIRECTORY / filepath).unlink()
 
 
 # -----------------------------------------------------------------------------
