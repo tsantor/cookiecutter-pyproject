@@ -13,6 +13,8 @@ The resulting generated Python package features:
 - `sentry-sdk` for error reporting (optional)
 - `twine` for publishing to PyPI
 - `Makefile` with common development related commands
+- 100% test coverage
+- Passes `ruff check` linting
 
 ## Quickstart
 
