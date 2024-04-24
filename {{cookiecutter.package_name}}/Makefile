@@ -37,8 +37,9 @@ env:  ## Create virtual environment (uses `pyenv`)
 
 env_remove:  ## Remove virtual environment
 	pyenv uninstall -f ${venv}
+	rm -rf .venv/
 
-env_from_scratch: env_remove env pip_install pip_install_editable  ## Create environment from scratch
+env_recreate: env_remove env pip_install pip_install_editable  ## Recreate environment from scratch
 
 pyenv_rehash:	## Rehash pyenv
 	pyenv rehash
@@ -52,19 +53,19 @@ pip_install:  ## Install requirements
 	@for file in $$(ls requirements/*.txt); do \
 			python3 -m pip install -r $$file; \
 	done
+	pre-commit install
 
 pip_install_editable:  ## Install in editable mode
 	python3 -m pip install -e .
-	pyenv_rehash
 
 pip_list:  ## Run pip list
 	python3 -m pip list
 
-pip_freeze:  ## Run pipfreezer
-	pipfreezer
+pip_freeze:  ## Run pipfreezer freeze
+	pipfreezer freeze  --verbose
 
-pip_checker:  ## Run pipchecker
-	python3 manage.py pipchecker
+pip_upgrade:  ## Run pipfreezer upgrade
+	pipfreezer upgrade  --verbose
 
 # -----------------------------------------------------------------------------
 # Testing
