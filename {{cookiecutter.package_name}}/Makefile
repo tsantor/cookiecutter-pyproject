@@ -37,7 +37,6 @@ env:  ## Create virtual environment (uses `pyenv`)
 
 env_remove:  ## Remove virtual environment
 	pyenv uninstall -f ${venv}
-	rm -rf .venv/
 
 env_recreate: env_remove env pip_install pip_install_editable  ## Recreate environment from scratch
 
