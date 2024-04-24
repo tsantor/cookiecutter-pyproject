@@ -5,5 +5,5 @@ python_files = [
     "tests.py",
     "test_*.py",
 ]
-norecursedirs = ["node_modules", "{{cookiecutter.package_name}}", "my-python-package"]
+norecursedirs = ["node_modules", "my-python-package", "{{cookiecutter.package_name}}"]
 filterwarnings = "ignore::DeprecationWarning"

@@ -39,6 +39,5 @@ make pytest
 
 Run `make` to view a list of available commands with descriptions.
 
-
 ## Not Exactly What You Want?
 This is what I want. _It might not be what you want_. If you have differences in your preferred setup, I encourage you to fork this to create your own version.

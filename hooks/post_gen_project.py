@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 from pathlib import Path
 
 PROJECT_DIRECTORY = Path.cwd()
@@ -8,8 +7,6 @@ WARNING = "\x1b[1;33m [WARNING]: "
 INFO = "\x1b[1;33m [INFO]: "
 HINT = "\x1b[3;33m"
 SUCCESS = "\x1b[1;32m [SUCCESS]: "
-
-DEBUG_VALUE = "debug"
 
 # -----------------------------------------------------------------------------
 # Utility functions
