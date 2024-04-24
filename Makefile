@@ -91,3 +91,10 @@ pytest_verbose:  ## Run tests in verbose mode
 # 	open htmlcov/index.html
 
 # -----------------------------------------------------------------------------
+# Miscellaneous
+# -----------------------------------------------------------------------------
+
+tree:  ## Show directory tree
+	tree -I 'build|dist|htmlcov|node_modules|migrations|contrib|__pycache__|*.egg-info|staticfiles|media|my-python-package'
+
+# -----------------------------------------------------------------------------

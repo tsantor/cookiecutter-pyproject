@@ -134,22 +134,22 @@ clean_tests: clean_pytest_cache clean_ruff_cache clean_tox_cache clean_coverage 
 # -----------------------------------------------------------------------------
 
 tree:  ## Show directory tree
-	tree -I 'build|dist|htmlcov|node_modules|migrations|contrib|__pycache__|*.egg-info|staticfiles|media|django_project'
+	tree -I 'build|dist|htmlcov|node_modules|migrations|contrib|__pycache__|*.egg-info|staticfiles|media'
 
 # -----------------------------------------------------------------------------
 # Deploy
 # -----------------------------------------------------------------------------
 
-dist: clean  ## Builds source and wheel package
-	python3 -m build --wheel
+dist: clean ## Builds source and wheel package
+	python3 -m build
 
-release_test: dist  ## Upload package to pypi test
+twine_upload_test: dist ## Upload package to pypi test
 	twine upload dist/* -r pypitest
 
-release: dist  ## Package and upload a release
+twine_upload: dist ## Package and upload a release
 	twine upload dist/*
 
-check: dist  ## Twine check
+twine_check: dist ## Twine check
 	twine check dist/*
 
 # -----------------------------------------------------------------------------

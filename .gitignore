@@ -2,6 +2,7 @@
 .python-version
 
 # Python
+__pycache__/
 *.pyc
 
 # Editor
