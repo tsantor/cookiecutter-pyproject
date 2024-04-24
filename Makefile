@@ -32,12 +32,21 @@ BAKE_OPTIONS=--no-input
 
 env:  ## Install virtualenv for development (uses `pyenv`)
 	pyenv virtualenv ${python_version} ${venv} && pyenv local ${venv}
-	python3 -m pip install -U pip -r requirements_dev.txt
 
 env_remove:  ## Remove virtual environment
 	pyenv uninstall -f ${venv}
 
-env_from_scratch: env_remove env  ## Create environment from scratch
+env_from_scratch: env_remove env pip_install  ## Create environment from scratch
+
+# -----------------------------------------------------------------------------
+# Pip
+# -----------------------------------------------------------------------------
+
+pip_install:  ## Install requirements
+	python3 -m pip install -U pip -r requirements_dev.txt
+
+pip_list:  ## Run pip list
+	python3 -m pip list
 
 # -----------------------------------------------------------------------------
 # Cookiecutter
@@ -54,20 +63,20 @@ replay: watch
 	;
 
 eat:  ## Remove generated project
-	rm -rf my-awesome-package
+	rm -rf my-python-package
 
 # -----------------------------------------------------------------------------
 # Testing
 # -----------------------------------------------------------------------------
 
 pytest:  ## Run tests
-	pytest -vx tests
+	pytest -vx
 
-pytest_generation:  ## Run tests for cookiecutter generation
-	pytest -vx tests/test_cookiecutter_generation.py
+# pytest_generation:  ## Run tests for cookiecutter generation
+# 	pytest -vx tests/test_cookiecutter_generation.py
 
-# pytest_verbose:  ## Run tests in verbose mode
-# 	pytest -vvs
+pytest_verbose:  ## Run tests in verbose mode
+	pytest -vvs
 
 # coverage:  ## Run tests with coverage
 # 	coverage run -m pytest && coverage html

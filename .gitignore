@@ -1,6 +1,18 @@
 .DS_Store
 .python-version
+
+# Python
+*.pyc
+
+# Editor
+.vscode/
+
+# Testing leftovers
 .coverage
+.ruff_cache/
+.tox/
+htmlcov/
 node_modules/
 
-my-awesome-package/
+# Project Specific
+my-python-package/

@@ -43,4 +43,5 @@ with CONFIG_FILE.open("r") as f:
 {%- if cookiecutter.use_sentry == "y" %}
 SENTRY_DSN = config["default"]["sentry_dsn"]
 {%- endif %}
+
 FOO = config["default"]["foo"]

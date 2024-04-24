@@ -1,8 +1,8 @@
 {
-  "project_name": "My Awesome Package",
+  "project_name": "My Python Package",
   "package_name": "{{ cookiecutter.project_name.lower().replace(' ', '-') }}",
   "package_dir": "{{ cookiecutter.project_name.lower()|replace(' ', '_')|replace('-', '_')|replace('.', '_')|trim() }}",
-  "description": "Python Package Boilerplate contains all the boilerplate you need to create a Python package.",
+  "description": "Python Package contains all the boilerplate you need to create a Python package.",
   "author_name": "Tim Santor",
   "email": "tsantor@xstudios.com",
   "domain_name": "xstudios.com",

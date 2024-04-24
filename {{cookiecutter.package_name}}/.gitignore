@@ -1,5 +1,6 @@
 # System
 *.DS_Store
+.python-version
 
 # Python
 *.pyc
@@ -13,10 +14,10 @@ dist/
 .vscode/
 
 # Testing leftovers
-.tox/
 .coverage
-.python-version
-htmlcov/
-
 .ruff_cache/
+.tox/
+htmlcov/
 node_modules/
+
+# Project Specific

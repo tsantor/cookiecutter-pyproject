@@ -31,14 +31,14 @@ auto_fixable = pytest.mark.skipif(not AUTOFIXABLE_STYLES, reason="auto-fixable")
 def context():
     return {
         "project_name": "My Awesome Package",
-        "package_name": "my-awesome-package",
+        "package_name": "my-python-package",
         "package_dir": "my_awesome_package",
         "author_name": "Test Author",
         "email": "test@example.com",
         "description": "A short description of the project.",
         "domain_name": "example.com",
         "version": "0.1.0",
-        "github_username": "xstudios",
+        "github_username": "testuser",
         "use_sentry": "n",
         "has_cli": "y",
     }
