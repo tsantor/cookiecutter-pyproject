@@ -1,19 +1,35 @@
-.DS_Store
+# System
+*.DS_Store
 .python-version
 
-# Python
+# Byte-compiled / optimized / DLL files
 __pycache__/
-*.pyc
+*.py[cod]
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
 
 # Editor
 .vscode/
+
+# Environments
+.env
+.venv
+env/
+venv/
+
+# Django stuff
+*.log
+db.sqlite3
 
 # Testing leftovers
 .coverage
 .ruff_cache/
 .tox/
 htmlcov/
-node_modules/
 
 # Project Specific
+node_modules/
 my-python-package/
