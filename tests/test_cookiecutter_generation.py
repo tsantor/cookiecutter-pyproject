@@ -53,6 +53,8 @@ SUPPORTED_COMBINATIONS = [
     {"use_sentry": "n"},
     {"has_cli": "y"},
     {"has_cli": "n"},
+    {"use_rich": "y"},
+    {"use_rich": "n"},
 ]
 
 UNSUPPORTED_COMBINATIONS = []
@@ -109,7 +111,7 @@ def test_ruff_check_passes(cookies, context_override):
         pytest.fail(e.stdout.decode())
 
 
-@auto_fixable
+# @auto_fixable
 @pytest.mark.parametrize("context_override", SUPPORTED_COMBINATIONS, ids=_fixture_id)
 def test_ruff_format_passes(cookies, context_override):
     """Check whether generated project passes ruff format."""
@@ -125,7 +127,7 @@ def test_ruff_format_passes(cookies, context_override):
         pytest.fail(e.stdout.decode())
 
 
-@auto_fixable
+# @auto_fixable
 @pytest.mark.parametrize("context_override", SUPPORTED_COMBINATIONS, ids=_fixture_id)
 def test_isort_passes(cookies, context_override):
     """Check whether generated project passes isort style."""

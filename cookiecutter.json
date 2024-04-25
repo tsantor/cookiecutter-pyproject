@@ -16,5 +16,6 @@
   ],
   "github_username": "tsantor",
   "use_sentry": "n",
-  "has_cli": "y"
+  "has_cli": "y",
+  "use_rich": "y"
 }

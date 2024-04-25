@@ -23,6 +23,9 @@ dependencies = [
   {%- if cookiecutter.has_cli == "y" %}
   "click",
   {%- endif %}
+  {%- if cookiecutter.use_rich == "y" %}
+  "rich",
+  {%- endif %}
 ]
 
 dynamic = ["version", "readme"]
