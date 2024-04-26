@@ -19,13 +19,15 @@ classifiers = [
   "Programming Language :: Python :: 3.12",
 ]
 dependencies = [
-  "toml",
   {%- if cookiecutter.has_cli == "y" %}
   "click",
   {%- endif %}
+  "pydantic-settings",
+  "pydantic",
   {%- if cookiecutter.use_rich == "y" %}
   "rich",
   {%- endif %}
+  "toml",
 ]
 
 dynamic = ["version", "readme"]

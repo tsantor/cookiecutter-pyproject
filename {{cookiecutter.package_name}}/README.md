@@ -19,6 +19,7 @@ python3 -m pip install git+https://github.com/{{cookiecutter.github_username}}/{
 ```
 
 ## Development
+To get a list of all commands with descriptions simply run `make`.
 
 ```bash
 make env

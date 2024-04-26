@@ -1,15 +1,47 @@
 import logging
 from pathlib import Path
+import signal
 
 import click
 
 from . import settings
+from .core import do_something
 from .logging import setup_logging
 from .utils import home_agnostic_path
 
 logger = logging.getLogger(__name__)
 
 
+# -----------------------------------------------------------------------------
+# Entry point - handles graceful exit on SIGINT/SIGTERM
+# -----------------------------------------------------------------------------
+
+
+class GracefulExit(SystemExit):
+    code = 1
+
+
+def _raise_graceful_exit(signum, frame):
+    raise GracefulExit()
+
+
+def main(path):
+    """Main entry point for the CLI."""
+    signal.signal(signal.SIGINT, _raise_graceful_exit)
+    signal.signal(signal.SIGTERM, _raise_graceful_exit)
+
+    try:
+        click.echo("Hello, World!")
+        click.echo(f"Path: {home_agnostic_path(path)}")
+        do_something()
+    except GracefulExit:
+        pass
+    finally:
+        click.echo("Cleaning up...")
+
+
+# -----------------------------------------------------------------------------
+# Command-line interface
 # -----------------------------------------------------------------------------
 
 
@@ -37,10 +69,7 @@ def run(path, verbose) -> None:
 
     setup_logging(verbose, settings.LOG_FILE)
 
-    path = Path(path).expanduser()
-
-    click.echo("Hello, World!")
-    click.echo(f"Path: {home_agnostic_path(path)}")
+    main(path)
 
 
 # Set up your command-line interface grouping

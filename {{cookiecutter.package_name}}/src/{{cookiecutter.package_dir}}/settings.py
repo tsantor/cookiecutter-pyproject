@@ -4,6 +4,7 @@ from pathlib import Path
 
 import pkg_resources
 import toml
+from pydantic_settings import BaseSettings
 
 logger = logging.getLogger(__name__)
 
@@ -23,15 +24,11 @@ def copy_resource_file(filename, dst):
     shutil.copy2(src, dst)
 
 
-CONFIG_FILE = Path(
-    "~/.{{cookiecutter.package_name}}/{{cookiecutter.package_name}}.toml"
-).expanduser()
+CONFIG_FILE = Path("~/.{{cookiecutter.package_name}}/{{cookiecutter.package_name}}.toml").expanduser()
 if not CONFIG_FILE.exists():
     copy_resource_file("{{cookiecutter.package_name}}.toml", str(CONFIG_FILE))  # pragma: no cover
 
-LOG_FILE = Path(
-    "~/.{{cookiecutter.package_name}}/{{cookiecutter.package_name}}.log"
-).expanduser()
+LOG_FILE = Path("~/.{{cookiecutter.package_name}}/{{cookiecutter.package_name}}.log").expanduser()
 if not LOG_FILE.exists():
     LOG_FILE.touch()  # pragma: no cover
 
@@ -41,7 +38,19 @@ with CONFIG_FILE.open("r") as f:
     config = toml.load(f)
 
 {%- if cookiecutter.use_sentry == "y" %}
-SENTRY_DSN = config["default"]["sentry_dsn"]
+# SENTRY_DSN = config["default"]["sentry_dsn"]
 {%- endif %}
 
-FOO = config["default"]["foo"]
+# FOO = config["default"]["foo"]
+
+
+class AppConfig(BaseSettings):
+    """Application configuration."""
+    {%- if cookiecutter.use_sentry == "y" %}
+    sentry_dsn: str = None
+    {%- endif %}
+    foo: str = None
+
+
+app_config = AppConfig(**config["default"])
+logger.info("Config: %s", app_config)
