@@ -1,24 +1,13 @@
 import logging
 import logging.handlers
-{%- if cookiecutter.use_rich == "y" %}
 
 from rich.logging import RichHandler
-{%- endif %}
-
-# Shut up these 3rd party packages
-shutup = ["urllib3"]
-for package in shutup:
-    logging.getLogger(package).setLevel(logging.WARNING)
 
 
 def setup_logging(verbose=False, log_file=None):
     """Setup logging."""
 
-    {%- if cookiecutter.use_rich == "y" %}
     handlers = [RichHandler()]
-    {%- else %}
-    handlers = [logging.StreamHandler()]
-    {%- endif %}
 
     # File handler logging is more detailed
     if log_file:
@@ -33,11 +22,14 @@ def setup_logging(verbose=False, log_file=None):
         file_handler.setFormatter(file_formatter)
         handlers.append(file_handler)
 
+    # Set the logging level of the root logger to WARNING
     logging.basicConfig(
         handlers=handlers,
-        level=logging.INFO,
+        level=logging.WARNING,
         format="[%(name)s] %(message)s",
         datefmt="%Y-%m-%d %I:%M:%S %p",
     )
-    if verbose:
-        logging.getLogger().setLevel(logging.DEBUG)
+
+    # Set the logging level of your application's logger to INFO or DEBUG
+    logger = logging.getLogger("{{cookiecutter.package_name}}")
+    logger.setLevel(logging.DEBUG if verbose else logging.INFO)

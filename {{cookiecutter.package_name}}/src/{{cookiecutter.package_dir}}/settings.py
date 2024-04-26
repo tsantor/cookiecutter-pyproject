@@ -6,7 +6,7 @@ import pkg_resources
 import toml
 from pydantic_settings import BaseSettings
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("{{cookiecutter.package_name}}")
 
 # -----------------------------------------------------------------------------
 

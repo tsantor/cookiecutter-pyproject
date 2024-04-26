@@ -6,7 +6,7 @@ from . import settings
 from .logging import setup_logging
 from .entrypoint import main
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("{{cookiecutter.package_name}}")
 
 
 def silent_echo(*args, **kwargs):

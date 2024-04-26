@@ -5,7 +5,7 @@ import click
 from .utils import home_agnostic_path
 from .core import do_something
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("{{cookiecutter.package_name}}")
 
 
 class GracefulExit(SystemExit):
