@@ -9,6 +9,15 @@ from pydantic_settings import BaseSettings
 logger = logging.getLogger("{{cookiecutter.package_name}}")
 
 # -----------------------------------------------------------------------------
+# PACKAGE CONSTANTS
+# -----------------------------------------------------------------------------
+
+APP_NAME: str = "{{cookiecutter.package_name}}"
+PACKAGE_DIR: str = "{{cookiecutter.package_dir}}"
+CONFIG_FILE: Path = Path(f"~/.{APP_NAME}/{APP_NAME}.toml").expanduser()
+LOG_FILE: Path = Path(f"~/.{APP_NAME}/{APP_NAME}.log").expanduser()
+
+# -----------------------------------------------------------------------------
 
 
 def copy_resource_file(filename, dst):
@@ -19,29 +28,25 @@ def copy_resource_file(filename, dst):
         dir_path.mkdir()
 
     # Copy data file to destination
-    src = pkg_resources.resource_filename("{{cookiecutter.package_dir}}", f"data/{filename}")
+    src = pkg_resources.resource_filename(PACKAGE_DIR, f"data/{filename}")
     dst = str(Path(dir_path).expanduser())
     shutil.copy2(src, dst)
 
 
-CONFIG_FILE = Path("~/.{{cookiecutter.package_name}}/{{cookiecutter.package_name}}.toml").expanduser()
 if not CONFIG_FILE.exists():
-    copy_resource_file("{{cookiecutter.package_name}}.toml", str(CONFIG_FILE))  # pragma: no cover
+    copy_resource_file(f"{APP_NAME}.toml", str(CONFIG_FILE))  # pragma: no cover
 
-LOG_FILE = Path("~/.{{cookiecutter.package_name}}/{{cookiecutter.package_name}}.log").expanduser()
 if not LOG_FILE.exists():
     LOG_FILE.touch()  # pragma: no cover
-
-# -----------------------------------------------------------------------------
 
 with CONFIG_FILE.open("r") as f:
     config = toml.load(f)
 
+# -----------------------------------------------------------------------------
+
 {%- if cookiecutter.use_sentry == "y" %}
 # SENTRY_DSN = config["default"]["sentry_dsn"]
 {%- endif %}
-
-# FOO = config["default"]["foo"]
 
 
 class AppConfig(BaseSettings):

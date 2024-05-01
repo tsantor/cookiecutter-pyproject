@@ -23,7 +23,7 @@ help:
 
 python_version=3.9.11
 venv={{ cookiecutter.package_name }}_env
-package_name={{ cookiecutter.package_name }}
+package_name={{ cookiecutter.package_name.replace("-", "_") }}
 aws_profile=xstudios
 s3_bucket=xstudios-pypi
 
