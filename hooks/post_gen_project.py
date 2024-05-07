@@ -1,3 +1,4 @@
+import shutil
 from pathlib import Path
 
 PROJECT_DIRECTORY = Path.cwd()
@@ -11,6 +12,12 @@ SUCCESS = "\x1b[1;32m [SUCCESS]: "
 # -----------------------------------------------------------------------------
 # Utility functions
 # -----------------------------------------------------------------------------
+
+
+def remove_src_file(file_name):
+    """Remove file from generated project."""
+    dir = Path(PROJECT_DIRECTORY / "src" / "{{cookiecutter.package_dir}}")
+    Path(dir / file_name).unlink()
 
 
 def remove_open_source_files():
@@ -29,12 +36,22 @@ def remove_gplv3_files():
 
 def remove_cli():
     """Remove CLI file from generated project."""
-    Path(PROJECT_DIRECTORY / "src" / "{{cookiecutter.package_dir}}" / "cli.py").unlink()
+    remove_src_file("cli.py")
+    remove_src_file("entrypoint.py")
 
 
-def remove_file(filepath):
-    """Remove file from generated project."""
-    Path(PROJECT_DIRECTORY / filepath).unlink()
+def remove_settings():
+    """Remove settings files from generated project."""
+    remove_src_file("settings.py")
+    remove_src_file("tests/test_settings.py")
+
+
+# copy LICENSE file to mkdocs/docs/license.md
+def copy_license():
+    """Copy LICENSE file to mkdocs/docs/license.md."""
+    src = Path(PROJECT_DIRECTORY / "LICENSE")
+    dst = Path(PROJECT_DIRECTORY / "mkdocs" / "docs" / "license.md")
+    shutil.copy2(src, dst)
 
 
 # -----------------------------------------------------------------------------
@@ -53,6 +70,11 @@ def main():
 
     if "{{ cookiecutter.has_cli }}".lower() == "n":
         remove_cli()
+
+    # if "".lower() == "n":
+    #     remove_settings()
+
+    copy_license()
 
     print(SUCCESS + "Project initialized, keep up the good work!" + TERMINATOR)
 

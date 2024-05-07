@@ -1,0 +1,109 @@
+site_name: {{ cookiecutter.project_name }} Docs
+site_author: {{ cookiecutter.author_name }}
+use_directory_urls: true
+# google_analytics: ['UA-ID', '{{ cookiecutter.domain_name }}']
+
+copyright: Copyright &copy; 20XX – X Studios™, Inc.
+
+repo_url: https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.package_name }}/
+repo_name: Bitbucket
+
+# Configuration
+theme:
+    name: "material"
+    palette:
+        scheme: default
+        primary: custom
+        accent: custom
+    icon:
+        repo: fontawesome/brands/git-alt
+    favicon: images/favicon.png
+    # logo: img/x_x_white.svg
+    font:
+        text: Raleway
+        code: Roboto Mono
+    features:
+        - navigation.tabs
+        - navigation.instant
+        - navigation.tabs.sticky
+        - navigation.top
+        # - navigation.footer
+        # - navigation.tracking
+        # - toc.integrate
+        - content.code.copy
+        - content.code.annotate
+
+# Extensions
+markdown_extensions:
+    - abbr
+    - attr_list
+    - tables
+    - admonition
+    - sane_lists
+    - smarty
+    - meta
+    - toc:
+          toc_depth: 2
+          permalink: true
+    - pymdownx.betterem:
+        smart_enable: all
+    - pymdownx.details
+    - pymdownx.highlight:
+          use_pygments: true
+          linenums: false
+    - pymdownx.inlinehilite
+    - pymdownx.magiclink
+    - pymdownx.mark
+    - pymdownx.smartsymbols
+    - pymdownx.superfences:
+          preserve_tabs: true
+          custom_fences:
+            # Mermaid diagrams
+            - name: mermaid
+              class: mermaid
+              format: !!python/name:pymdownx.superfences.fence_code_format
+    - pymdownx.tabbed:
+        alternate_style: true
+    - pymdownx.tilde
+    - pymdownx.emoji:
+          emoji_index: !!python/name:material.extensions.emoji.twemoji
+          emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+# Plugins
+plugins:
+    - search
+    - awesome-pages
+    - minify:
+          minify_html: true
+          minify_js: true
+          minify_css: true
+          cache_safe: true
+
+# Customization
+extra_css:
+    - css/extra.css
+    # - https://use.typekit.net/pkv5qkr.css
+    # - https://domain.com/styles.css
+    # - https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css
+
+# extra_javascript:
+    # - https://domain.com/javascript.js
+
+# Page tree
+nav:
+  - Getting Started:
+    - index.md
+    - help.md
+  - advanced-usage.md
+  - api-reference.md
+  - contributing.md
+
+extra:
+    generator: false
+    social:
+        - icon: fontawesome/brands/twitter
+          link: https://twitter.com/xstudios
+        - icon: fontawesome/brands/facebook
+          link: https://facebook.com/xstudiosinc
+        - icon: fontawesome/brands/instagram
+          link: https://instagram.com/xstudios

@@ -11,12 +11,14 @@
 Install {{ cookiecutter.project_name }}:
 
 ```bash
-# From pypi
 python3 -m pip install {{cookiecutter.package_name}}
 
 # From source
 python3 -m pip install git+https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.package_name}}.git
 ```
+
+## Documentation
+Visit the docs [here](https://github.io/{{cookiecutter.github_username}}/{{cookiecutter.package_name}}/docs/)
 
 ## Development
 To get a list of all commands with descriptions simply run `make`.
@@ -33,14 +35,6 @@ make pip_install_editable
 make pytest
 make coverage
 make open_coverage
-```
-
-## Deploying
-
-```bash
-# Publish to PyPI Test before the live PyPi
-make release_test
-make release
 ```
 
 ## Issues

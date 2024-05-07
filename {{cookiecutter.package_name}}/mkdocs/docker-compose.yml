@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  mkdocs:
+    build: .
+    image: {{cookiecutter.package_name}}_mkdocs
+    container_name: {{cookiecutter.package_name}}_mkdocs
+    ports:
+      - "8989:8989"
+    volumes:
+      - .:/docs
+    command: serve --dev-addr=0.0.0.0:8989
+    restart: always
