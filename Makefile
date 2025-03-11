@@ -21,7 +21,7 @@ help:
 # Variables
 # -----------------------------------------------------------------------------
 
-python_version=3.9.11
+python_version=3.13.1
 venv=cookiecutter-pyproject_env
 
 BAKE_OPTIONS=--no-input
@@ -30,11 +30,11 @@ BAKE_OPTIONS=--no-input
 # Environment
 # -----------------------------------------------------------------------------
 
-env:  ## Install virtualenv for development (uses `pyenv`)
-	pyenv virtualenv ${python_version} ${venv} && pyenv local ${venv}
+env:  ## Install virtualenv for development (uses `uv`)
+	uv venv --python ${python_version}
 
 env_remove:  ## Remove virtual environment
-	pyenv uninstall -f ${venv}
+	rm -rf .venv/
 
 env_from_scratch: env_remove env pip_install  ## Create environment from scratch
 
@@ -43,10 +43,10 @@ env_from_scratch: env_remove env pip_install  ## Create environment from scratch
 # -----------------------------------------------------------------------------
 
 pip_install:  ## Install requirements
-	python3 -m pip install -U pip -r requirements_dev.txt
+	uv pip install -U pip -r requirements_dev.txt
 
 pip_list:  ## Run pip list
-	python3 -m pip list
+	uv pip list
 
 # -----------------------------------------------------------------------------
 # Cookiecutter
