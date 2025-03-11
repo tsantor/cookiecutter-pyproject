@@ -21,8 +21,7 @@ help:
 # Variables
 # -----------------------------------------------------------------------------
 
-python_version=3.9.11
-venv={{ cookiecutter.package_name }}_env
+PYTHON_VERSION=3.13.1
 package_name={{ cookiecutter.package_name.replace("-", "_") }}
 aws_profile=xstudios
 s3_bucket=xstudios-pypi
@@ -32,39 +31,33 @@ s3_bucket=xstudios-pypi
 # Environment
 # -----------------------------------------------------------------------------
 
-env:  ## Create virtual environment (uses `pyenv`)
-	pyenv virtualenv ${python_version} ${venv} && pyenv local ${venv}
+env:  ## Create virtual environment (uses `uv`)
+	uv venv --python ${PYTHON_VERSION}
 
 env_remove:  ## Remove virtual environment
-	pyenv uninstall -f ${venv}
+	rm -rf .venv/
 
 env_recreate: env_remove env pip_install pip_install_editable  ## Recreate environment from scratch
-
-pyenv_rehash:	## Rehash pyenv
-	pyenv rehash
 
 # -----------------------------------------------------------------------------
 # Pip
 # -----------------------------------------------------------------------------
 
 pip_install:  ## Install requirements
-	python3 -m pip install --upgrade pip
+	uv pip install --upgrade pip
 	@for file in $$(ls requirements/*.txt); do \
-			python3 -m pip install -r $$file; \
+			uv pip install -r $$file; \
 	done
 	pre-commit install
 
 pip_install_editable:  ## Install in editable mode
-	python3 -m pip install -e .
+	uv pip install -e .
 
 pip_list:  ## Run pip list
-	python3 -m pip list
+	uv pip list
 
 pip_freeze:  ## Run pipfreezer freeze
 	pipfreezer freeze  --verbose
-
-pip_upgrade:  ## Run pipfreezer upgrade
-	pipfreezer upgrade  --verbose
 
 # -----------------------------------------------------------------------------
 # Testing

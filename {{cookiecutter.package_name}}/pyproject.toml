@@ -28,6 +28,9 @@ dependencies = [
   "rich",
   {%- endif %}
   "toml",
+  {%- if cookiecutter.use_sentry == "y" %}
+  "sentry-sdk",
+  {%- endif %}
 ]
 
 dynamic = ["version", "readme"]

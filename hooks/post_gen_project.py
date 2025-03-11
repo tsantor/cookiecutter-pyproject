@@ -46,7 +46,6 @@ def remove_settings():
     remove_src_file("tests/test_settings.py")
 
 
-# copy LICENSE file to mkdocs/docs/license.md
 def copy_license():
     """Copy LICENSE file to mkdocs/docs/license.md."""
     src = Path(PROJECT_DIRECTORY / "LICENSE")
@@ -74,7 +73,8 @@ def main():
     # if "".lower() == "n":
     #     remove_settings()
 
-    copy_license()
+    # MkDocs
+    # copy_license()
 
     print(SUCCESS + "Project initialized, keep up the good work!" + TERMINATOR)
 

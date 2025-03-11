@@ -6,7 +6,7 @@ use_directory_urls: true
 copyright: Copyright &copy; 20XX – X Studios™, Inc.
 
 repo_url: https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.package_name }}/
-repo_name: Bitbucket
+repo_name: Github
 
 # Configuration
 theme:

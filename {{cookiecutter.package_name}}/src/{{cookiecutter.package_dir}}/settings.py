@@ -2,9 +2,12 @@ import logging
 import shutil
 from pathlib import Path
 
-import pkg_resources
 import toml
-from pydantic_settings import BaseSettings
+import importlib.resources as resources
+from .models import AppConfig
+{%- if cookiecutter.use_sentry == "y" -%}
+from .models import SentryConfig
+{% endif %}
 
 logger = logging.getLogger("{{cookiecutter.package_name}}")
 
@@ -12,10 +15,11 @@ logger = logging.getLogger("{{cookiecutter.package_name}}")
 # PACKAGE CONSTANTS
 # -----------------------------------------------------------------------------
 
+SETTINGS_DIR: Path = Path("~/.{{cookiecutter.package_name}}")
 APP_NAME: str = "{{cookiecutter.package_name}}"
 PACKAGE_DIR: str = "{{cookiecutter.package_dir}}"
-CONFIG_FILE: Path = Path(f"~/.{APP_NAME}/{APP_NAME}.toml").expanduser()
-LOG_FILE: Path = Path(f"~/.{APP_NAME}/{APP_NAME}.log").expanduser()
+CONFIG_FILE: Path = Path(f"{SETTINGS_DIR}/{APP_NAME}.toml").expanduser()
+LOG_FILE: Path = Path(f"{SETTINGS_DIR}/{APP_NAME}.log").expanduser()
 
 # -----------------------------------------------------------------------------
 
@@ -28,9 +32,10 @@ def copy_resource_file(filename, dst):
         dir_path.mkdir()
 
     # Copy data file to destination
-    src = pkg_resources.resource_filename(PACKAGE_DIR, f"data/{filename}")
-    dst = str(Path(dir_path).expanduser())
-    shutil.copy2(src, dst)
+    ref = resources.files(PACKAGE_DIR) / f"data/{filename}"
+    with resources.as_file(ref) as src:
+        dst = str(Path(dir_path).expanduser())
+        shutil.copy2(src, dst)
 
 
 if not CONFIG_FILE.exists():
@@ -44,18 +49,7 @@ with CONFIG_FILE.open("r") as f:
 
 # -----------------------------------------------------------------------------
 
-{%- if cookiecutter.use_sentry == "y" %}
-# SENTRY_DSN = config["default"]["sentry_dsn"]
-{%- endif %}
-
-
-class AppConfig(BaseSettings):
-    """Application configuration."""
-    {%- if cookiecutter.use_sentry == "y" %}
-    sentry_dsn: str = None
-    {%- endif %}
-    foo: str = None
-
-
 app_config = AppConfig(**config["default"])
-logger.info("Config: %s", app_config)
+{%- if cookiecutter.use_sentry == "y" %}
+sentry_config = SentryConfig(**config.get("sentry", {}))
+{%- endif %}
