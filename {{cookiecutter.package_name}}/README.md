@@ -4,7 +4,7 @@
 
 ## Overview
 
-{{ cookiecutter.description }}
+{{ cookiecutter.project_short_description }}
 
 ## Installation
 

@@ -22,9 +22,15 @@ help:
 # -----------------------------------------------------------------------------
 
 PYTHON_VERSION=3.13.1
-package_name={{ cookiecutter.package_name.replace("-", "_") }}
+package_name={{ cookiecutter.package_dir }}
+package_version={{ cookiecutter.version }}
 aws_profile=xstudios
 s3_bucket=xstudios-pypi
+wheel_name=${package_name}-${package_version}-py3-none-any.whl
+package_url=https://${s3_bucket}.s3.amazonaws.com/${wheel_name}
+
+# package_version := $(shell python -c "import importlib.metadata; print(importlib.metadata.version('${package_name}'))")
+# package_url=https://${s3_bucket}.s3.amazonaws.com/${package_name}-${package_version}-py3-none-any.whl
 
 # START - Generic commands
 # -----------------------------------------------------------------------------
@@ -50,33 +56,50 @@ pip_install:  ## Install requirements
 	done
 	pre-commit install
 
+pip_add_dev_dependencies:  ## Add dev dependencies
+	uv add twine wheel build ruff pipdeptree pre-commit --group dev
+
+pip_add_test_dependencies:  ## Add test dependencies
+	uv add pytest pytest-cov pytest-mock coverage --group test
+
 pip_install_editable:  ## Install in editable mode
 	uv pip install -e .
+	uv sync --all-groups
+	pre-commit install
 
 pip_list:  ## Run pip list
 	uv pip list
 
-pip_freeze:  ## Run pipfreezer freeze
-	pipfreezer freeze  --verbose
+pip_tree: ## Run pip tree
+	uv pip tree
+
+pipdeptree:  ## # Run pipdeptree
+	uv run pipdeptree
+
+uv_sync:  ## Sync dependencies [production, dev, test]
+	uv sync --all-groups
+
+uv_lock_check:	## Check if lock file is up to date
+	uv lock --check
 
 # -----------------------------------------------------------------------------
 # Testing
 # -----------------------------------------------------------------------------
 
 pytest:  ## Run tests
-	pytest -vx
+	uv run pytest -vx --cov --cov-report=html
 
 pytest_verbose:  ## Run tests in verbose mode
-	pytest -vvs
+	uv run pytest -vvs --cov --cov-report=html
 
 coverage:  ## Run tests with coverage
-	coverage run -m pytest && coverage html
+	uv run coverage run -m pytest && coverage html
 
 coverage_verbose:  ## Run tests with coverage in verbose mode
-	coverage run -m pytest -vss && coverage html
+	uv run coverage run -m pytest -vss && coverage html
 
 coverage_skip:  ## Run tests with coverage and skip covered
-	coverage run -m pytest -vs && coverage html --skip-covered
+	uv run coverage run -m pytest -vs && coverage html --skip-covered
 
 open_coverage:  ## Open coverage report
 	open htmlcov/index.html
@@ -86,13 +109,13 @@ open_coverage:  ## Open coverage report
 # -----------------------------------------------------------------------------
 
 ruff_format: ## Run ruff format
-	ruff format src/{{cookiecutter.package_dir}}
+	uv run ruff format src/{{cookiecutter.package_dir}}
 
 ruff_check: ## Run ruff check
-	ruff check src/{{cookiecutter.package_dir}}
+	uv run ruff check src/{{cookiecutter.package_dir}}
 
 ruff_clean: ## Run ruff clean
-	ruff clean
+	uv run ruff clean
 
 # -----------------------------------------------------------------------------
 # Cleanup
@@ -127,7 +150,7 @@ clean_tests: clean_pytest_cache clean_ruff_cache clean_tox_cache clean_coverage 
 # -----------------------------------------------------------------------------
 
 tree:  ## Show directory tree
-	tree -I 'build|dist|htmlcov|node_modules|migrations|contrib|__pycache__|*.egg-info|staticfiles|media'
+	tree -I 'dist|htmlcov|node_modules|__pycache__|*.egg-info|mkdocs'
 
 # -----------------------------------------------------------------------------
 # Deploy
@@ -152,10 +175,20 @@ twine_check: dist ## Twine check
 create_latest_copy: dist  ## Create latest copy of distro
 	cp dist/*.whl dist/${package_name}-latest-py3-none-any.whl
 
-push_to_s3: create_latest_copy  ## Push distro to S3 bucket
+push_to_s3:  ## Push distro to S3 bucket
 	aws s3 sync --profile=${aws_profile} --acl public-read ./dist/ s3://${s3_bucket}/ \
         --exclude "*" --include "*.whl"
-	echo "https://${s3_bucket}.s3.amazonaws.com/${package_name}-latest-py3-none-any.whl"
+	echo "${package_url}"
+
+requirements_dependency:	## Generate secure URL
+	@sha256=$$(openssl sha256 dist/${wheel_name} | awk '{print $$2}'); \
+	echo "${package_name} @ ${package_url}?sha256=$$sha256"
+
+pyproject_dependency:	## Dependency line for pyproject.toml
+	@sha256=$$(openssl sha256 dist/${wheel_name} | awk '{print $$2}'); \
+	echo "${package_name}" = { url = "${package_url}", hash = "sha256=$$sha256" }
+
+dependency_urls: requirements_dependency pyproject_dependency ## Generate dependency URLs
 
 # END - Generic commands
 # -----------------------------------------------------------------------------

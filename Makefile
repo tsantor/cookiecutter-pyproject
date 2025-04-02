@@ -21,17 +21,15 @@ help:
 # Variables
 # -----------------------------------------------------------------------------
 
-python_version=3.13.1
-venv=cookiecutter-pyproject_env
-
 BAKE_OPTIONS=--no-input
+BUILD_DIR=my-python-package
 
 # -----------------------------------------------------------------------------
 # Environment
 # -----------------------------------------------------------------------------
 
 env:  ## Install virtualenv for development (uses `uv`)
-	uv venv --python ${python_version}
+	uv venv
 
 env_remove:  ## Remove virtual environment
 	rm -rf .venv/
@@ -43,7 +41,19 @@ env_from_scratch: env_remove env pip_install  ## Create environment from scratch
 # -----------------------------------------------------------------------------
 
 pip_install:  ## Install requirements
-	uv pip install -U pip -r requirements_dev.txt
+	uv add cookiecutter
+
+pip_install_dev: ## Install development requirements
+	uv add pip wheel build ruff pre-commit watchdog[watchmedo] binaryornot sh --group=dev
+
+pip_install_test: ## Install test requirements
+	uv add pytest pytest-cookies pytest-cov --group=test
+
+pip_install_all: pip_install pip_install_dev pip_install_test ## Install all requirements
+
+# pip_install_editable:  ## Install editable package
+# 	uv pip install -e .
+# 	# uv run pre-commit install
 
 pip_list:  ## Run pip list
 	uv pip list
@@ -63,7 +73,7 @@ replay: watch
 	;
 
 eat:  ## Remove generated project
-	rm -rf my-python-package
+	rm -rf ${BUILD_DIR}
 
 # -----------------------------------------------------------------------------
 # Testing

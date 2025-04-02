@@ -34,6 +34,7 @@ cookiecutter https://github.com/tsantor/cookiecutter-pyproject.git
 
 ```bash
 make env
+make pip_install_all
 make pytest
 ```
 

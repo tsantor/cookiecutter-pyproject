@@ -1,7 +1,0 @@
-twine  # https://github.com/pypa/twine
-wheel  # https://github.com/pypa/wheel
-build  # https://github.com/pypa/build
-
-# X Studios
-# ------------------------------------------------------------------------------
-pip-freezer  # https://github.com/tsantor/pip-freezer

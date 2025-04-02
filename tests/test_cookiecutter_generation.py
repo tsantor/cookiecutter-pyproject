@@ -35,7 +35,7 @@ def context():
         "author_name": "Test Author",
         "email": "test@example.com",
         "description": "A short description of the project.",
-        "domain_name": "example.com",
+        "domain": "example.com",
         "version": "0.1.0",
         "github_username": "testuser",
         "use_sentry": "n",
@@ -164,7 +164,7 @@ def test_trim_domain_email(cookies, context):
     """Check that leading and trailing spaces are trimmed in domain and email."""
     context.update(
         {
-            "domain_name": "   example.com   ",
+            "domain": "   example.com   ",
             "email": "  me@example.com  ",
         }
     )

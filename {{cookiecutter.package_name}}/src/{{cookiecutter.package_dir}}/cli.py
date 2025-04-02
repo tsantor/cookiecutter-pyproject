@@ -40,7 +40,7 @@ def run(path, verbose) -> None:
 @click.group()
 @click.version_option(package_name="{{cookiecutter.package_dir}}")
 def cli():
-    """{{cookiecutter.description}}"""
+    """{{cookiecutter.project_short_description}}"""
 
 
 cli.add_command(run)

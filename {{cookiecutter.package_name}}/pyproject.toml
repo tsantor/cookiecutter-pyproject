@@ -6,17 +6,16 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "{{ cookiecutter.package_name }}"
-description = "{{ cookiecutter.description }}"
+description = "{{ cookiecutter.project_short_description }}"
 classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Environment :: Console",
   "Intended Audience :: Developers",
   "Natural Language :: English",
-  "Programming Language :: Python :: 3.8",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
 ]
 dependencies = [
   {%- if cookiecutter.has_cli == "y" %}
@@ -28,6 +27,7 @@ dependencies = [
   "rich",
   {%- endif %}
   "toml",
+  "setuptools",
   {%- if cookiecutter.use_sentry == "y" %}
   "sentry-sdk",
   {%- endif %}
@@ -39,8 +39,12 @@ authors = [
   { name = "{{ cookiecutter.author_name }}", email = "{{ cookiecutter.email }}" },
 ]
 
+[dependency-groups]
+dev=[]
+test=[]
+
 [project.urls]
-# Homepage = "https://{{ cookiecutter.domain_name }}"
+# Homepage = "https://{{ cookiecutter.domain }}"
 # Documentation = "https://readthedocs.org//{{ cookiecutter.package_name }}"
 Repository = "https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.package_name }}.git"
 Issues = "https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.package_name }}/issues"
@@ -50,9 +54,6 @@ Changelog = "https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutt
 [project.scripts]
 {{ cookiecutter.package_name }} = "{{ cookiecutter.package_dir }}.cli:run"
 {%- endif %}
-
-[project.optional-dependencies]
-dev = []
 
 [tool.setuptools.packages.find]
 # https://setuptools.pypa.io/en/latest/userguide/datafiles.html

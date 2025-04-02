@@ -1,9 +1,10 @@
 import logging
 import shutil
+from importlib import resources
 from pathlib import Path
 
 import toml
-import importlib.resources as resources
+
 from .models import AppConfig
 {%- if cookiecutter.use_sentry == "y" %}
 from .models import SentryConfig

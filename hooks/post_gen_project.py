@@ -1,5 +1,6 @@
-import shutil
 from pathlib import Path
+
+from cookiecutter.main import cookiecutter
 
 PROJECT_DIRECTORY = Path.cwd()
 
@@ -16,6 +17,7 @@ SUCCESS = "\x1b[1;32m [SUCCESS]: "
 
 def remove_src_file(file_name):
     """Remove file from generated project."""
+    print(INFO + f"Removing {file_name} from src directory..." + TERMINATOR)
     dir = Path(PROJECT_DIRECTORY / "src" / "{{cookiecutter.package_dir}}")
     Path(dir / file_name).unlink()
 
@@ -24,6 +26,7 @@ def remove_open_source_files():
     """Remove open source files from generated project."""
     file_names = ["CONTRIBUTORS.txt", "LICENSE"]
     for file_name in file_names:
+        print(INFO + f"Removing {file_name} from project..." + TERMINATOR)
         Path(PROJECT_DIRECTORY / file_name).unlink()
 
 
@@ -31,6 +34,7 @@ def remove_gplv3_files():
     """Remove GPL v3 files from generated project."""
     file_names = ["COPYING"]
     for file_name in file_names:
+        print(INFO + f"Removing {file_name} from project..." + TERMINATOR)
         Path(PROJECT_DIRECTORY / file_name).unlink()
 
 
@@ -46,11 +50,23 @@ def remove_settings():
     remove_src_file("tests/test_settings.py")
 
 
-def copy_license():
-    """Copy LICENSE file to mkdocs/docs/license.md."""
-    src = Path(PROJECT_DIRECTORY / "LICENSE")
-    dst = Path(PROJECT_DIRECTORY / "mkdocs" / "docs" / "license.md")
-    shutil.copy2(src, dst)
+def create_docs():
+    """Create mkdocs project."""
+    cookiecutter(
+        "https://github.com/tsantor/cookiecutter-mkdocs.git",
+        no_input=True,  # Avoid prompting the user again
+        extra_context={
+            "project_name": "{{ cookiecutter.project_name }}",
+            "project_slug": "{{ cookiecutter.package_dir }}",
+            "project_short_description": "{{ cookiecutter.project_short_description }}",
+            "full_name": "{{ cookiecutter.author_name }}",
+            "email": "{{ cookiecutter.email }}",
+            "domain": "{{ cookiecutter.domain }}",
+            "version": "{{ cookiecutter.version }}",
+        },
+        output_dir=".",  # Current directory of new project
+    )
+    # rename generated mkdocs directory
 
 
 # -----------------------------------------------------------------------------
@@ -74,7 +90,7 @@ def main():
     #     remove_settings()
 
     # MkDocs
-    # copy_license()
+    create_docs()
 
     print(SUCCESS + "Project initialized, keep up the good work!" + TERMINATOR)
 
