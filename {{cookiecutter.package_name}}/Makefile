@@ -29,9 +29,6 @@ s3_bucket=xstudios-pypi
 wheel_name=${package_name}-${package_version}-py3-none-any.whl
 package_url=https://${s3_bucket}.s3.amazonaws.com/${wheel_name}
 
-# package_version := $(shell python -c "import importlib.metadata; print(importlib.metadata.version('${package_name}'))")
-# package_url=https://${s3_bucket}.s3.amazonaws.com/${package_name}-${package_version}-py3-none-any.whl
-
 # START - Generic commands
 # -----------------------------------------------------------------------------
 # Environment
@@ -49,13 +46,6 @@ env_recreate: env_remove env pip_install pip_install_editable  ## Recreate envir
 # Pip
 # -----------------------------------------------------------------------------
 
-pip_install:  ## Install requirements
-	uv pip install --upgrade pip
-	@for file in $$(ls requirements/*.txt); do \
-			uv pip install -r $$file; \
-	done
-	pre-commit install
-
 pip_add_dev_dependencies:  ## Add dev dependencies
 	uv add twine wheel build ruff pipdeptree pre-commit --group dev
 
@@ -64,8 +54,10 @@ pip_add_test_dependencies:  ## Add test dependencies
 
 pip_install_editable:  ## Install in editable mode
 	uv pip install -e .
-	uv sync --all-groups
+	# uv sync --all-groups
 	pre-commit install
+
+pip_install_all:  pip_add_dev_dependencies pip_add_test_dependencies pip_install_editable ## Install all dependencies
 
 pip_list:  ## Run pip list
 	uv pip list
@@ -150,7 +142,7 @@ clean_tests: clean_pytest_cache clean_ruff_cache clean_tox_cache clean_coverage 
 # -----------------------------------------------------------------------------
 
 tree:  ## Show directory tree
-	tree -I 'dist|htmlcov|node_modules|__pycache__|*.egg-info|mkdocs'
+	tree -I 'dist|htmlcov|node_modules|__pycache__|*.egg-info|utility-scripts|SCRATCH.md'
 
 # -----------------------------------------------------------------------------
 # Deploy
@@ -196,3 +188,13 @@ dependency_urls: requirements_dependency pyproject_dependency ## Generate depend
 # -----------------------------------------------------------------------------
 
 # Add your project specific commands here
+
+pip_install: pip_install_all  ## Install all dependencies
+	uv add aiomqtt click pydantic rich toml sentry-sdk setuptools psutil httpx
+
+rsync_to_pi:	## Sync files to Raspberry Pi
+	rsync -avz . pi@hostname.local:/home/pi/Projects/CLIENT/PROJECT/APP --delete \
+		--exclude=".DS_Store" --exclude='.git' --exclude='.venv' \
+		--exclude=".coverage" --exclude='htmlcov' --exclude='__pycache__' \
+		--exclude='.pytest_cache' --exclude='.ruff_cache' \
+		--exclude='.vscode' --exclude='node_modules' --exclude='dist' --exclude='*.egg-info'

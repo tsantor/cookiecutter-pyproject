@@ -21,11 +21,11 @@ dependencies = [
   {%- if cookiecutter.has_cli == "y" %}
   "click",
   {%- endif %}
-  "pydantic-settings",
   "pydantic",
   {%- if cookiecutter.use_rich == "y" %}
   "rich",
   {%- endif %}
+  "psutil",
   "toml",
   "setuptools",
   {%- if cookiecutter.use_sentry == "y" %}
@@ -52,7 +52,7 @@ Changelog = "https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutt
 {%- if cookiecutter.has_cli == "y" %}
 
 [project.scripts]
-{{ cookiecutter.package_name }} = "{{ cookiecutter.package_dir }}.cli:run"
+{{ cookiecutter.package_name }} = "{{ cookiecutter.package_dir }}.cli:cli"
 {%- endif %}
 
 [tool.setuptools.packages.find]

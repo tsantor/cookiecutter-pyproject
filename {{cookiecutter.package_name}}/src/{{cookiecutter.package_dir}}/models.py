@@ -1,13 +1,11 @@
 from pathlib import Path
-from typing import Optional
 
-from pydantic import field_validator
-from pydantic_settings import BaseSettings
+from pydantic import BaseModel, field_validator
 
 
-class AppConfig(BaseSettings):
+class AppConfig(BaseModel):
     foo: str = None
-    log_path: Optional[Path] = None  # noqa: UP007
+    log_path: Path | None = None
 
     @field_validator(
         "log_path",
@@ -17,6 +15,6 @@ class AppConfig(BaseSettings):
         return Path(v).expanduser() if v else None
 
 
-class SentryConfig(BaseSettings):
-    dsn: Optional[str] = None  # noqa: UP007
-    env: str = "production"
+class SentryConfig(BaseModel):
+    dsn: str | None = None
+    environment: str = "production"

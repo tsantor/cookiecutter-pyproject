@@ -1,15 +1,6 @@
-from pathlib import Path
-
-from {{cookiecutter.package_dir}}.utils import home_agnostic_path
+from {{cookiecutter.package_dir}}.utils import get_mac_address
 
 
-def test_home_agnostic_path(tmp_path):
-    home = Path.home()
-
-    # Test with a path in the home directory
-    path_in_home = home / "test"
-    assert home_agnostic_path(str(path_in_home)) == "~/test"
-
-    # Test with a path not in the home directory
-    path_not_in_home = tmp_path / "test"
-    assert home_agnostic_path(str(path_not_in_home)) == str(path_not_in_home)
+def test_get_mac_address():
+    mac = get_mac_address()
+    assert isinstance(mac, str)

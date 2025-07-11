@@ -1,4 +1,3 @@
-import logging
 import shutil
 from importlib import resources
 from pathlib import Path
@@ -9,18 +8,17 @@ from .models import AppConfig
 {%- if cookiecutter.use_sentry == "y" %}
 from .models import SentryConfig
 {% endif %}
-
-logger = logging.getLogger("{{cookiecutter.package_name}}")
+from .mqtt.models import MQTTConfig
 
 # -----------------------------------------------------------------------------
 # PACKAGE CONSTANTS
 # -----------------------------------------------------------------------------
 
-SETTINGS_DIR: Path = Path("~/.{{cookiecutter.package_name}}")
 APP_NAME: str = "{{cookiecutter.package_name}}"
 PACKAGE_DIR: str = "{{cookiecutter.package_dir}}"
-CONFIG_FILE: Path = Path(f"{SETTINGS_DIR}/{APP_NAME}.toml").expanduser()
-LOG_FILE: Path = Path(f"{SETTINGS_DIR}/{APP_NAME}.log").expanduser()
+SETTINGS_DIR: Path = Path("~/.{{cookiecutter.package_name}}").expanduser()
+CONFIG_FILE: Path = Path(f"{SETTINGS_DIR}/{APP_NAME}.toml")
+LOG_FILE: Path = Path(f"{SETTINGS_DIR}/{APP_NAME}.log")
 
 # -----------------------------------------------------------------------------
 
@@ -54,3 +52,4 @@ app_config = AppConfig(**config["default"])
 {%- if cookiecutter.use_sentry == "y" %}
 sentry_config = SentryConfig(**config.get("sentry", {}))
 {%- endif %}
+mqtt_config = MQTTConfig(**config.get("mqtt", {}))

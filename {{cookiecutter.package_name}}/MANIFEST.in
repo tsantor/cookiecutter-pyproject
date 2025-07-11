@@ -3,6 +3,4 @@ include HISTORY.md
 include LICENSE
 include README.md
 
-# recursive-include requirements/ *.txt
-
 recursive-include src/{{ cookiecutter.package_dir }}/data/ *.toml

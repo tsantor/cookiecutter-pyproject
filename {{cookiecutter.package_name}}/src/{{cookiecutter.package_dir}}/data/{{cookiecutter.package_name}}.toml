@@ -1,6 +1,16 @@
 [default]
-{%- if cookiecutter.use_sentry == "y" -%}
-# Sentry DSN for error tracking
-sentry_dsn = ""
-{%- endif %}
 foo = "bar"
+
+{% if cookiecutter.use_sentry == "y" -%}
+[sentry]
+dsn = ""
+environment = "production"
+{%- endif %}
+
+[mqtt]
+device_id = "DEVICE-ID-PLACEHOLDER"
+host = "127.0.0.1"
+port = 1883
+# creds = ""
+keep_alive = 20
+

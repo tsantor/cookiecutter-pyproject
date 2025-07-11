@@ -1,31 +1,38 @@
+import asyncio
 import logging
-import signal
-import click
+import os
+import sys
 
-from .utils import home_agnostic_path
-from .core import do_something
+from .app import MyApp
 
-logger = logging.getLogger("{{cookiecutter.package_name}}")
-
-
-class GracefulExit(SystemExit):
-    code = 1
+logger = logging.getLogger("{{ cookiecutter.package_name }}")
 
 
-def _raise_graceful_exit(signum, frame):
-    raise GracefulExit()
+def setup_windows_event_loop() -> None:
+    """Configure Windows-specific event loop policy."""
+    if sys.platform.lower() == "win32" or os.name.lower() == "nt":
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+        logger.debug("Set Windows Selector event loop policy")
 
 
-def main(path):
-    """Main entry point for the CLI."""
-    signal.signal(signal.SIGINT, _raise_graceful_exit)
-    signal.signal(signal.SIGTERM, _raise_graceful_exit)
+async def main() -> None:
+    """Main entry point."""
+    app = MyApp()
+    await app.run()
+
+
+def run():
+    """Run the application."""
+    setup_windows_event_loop()
 
     try:
-        click.echo("Hello, World!")
-        click.echo(f"Path: {home_agnostic_path(path)}")
-        do_something()
-    except GracefulExit:
-        pass
-    finally:
-        click.echo("Cleaning up...")
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        logger.info("Application interrupted by user")
+    except Exception:
+        logger.exception("Fatal error running application")
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    run()
