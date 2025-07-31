@@ -46,12 +46,6 @@ env_recreate: env_remove env pip_install_editable  ## Recreate environment from 
 # Pip
 # -----------------------------------------------------------------------------
 
-pip_add_dev_dependencies:  ## Add dev dependencies
-	uv add twine wheel build ruff pipdeptree pre-commit --group dev
-
-pip_add_test_dependencies:  ## Add test dependencies
-	uv add pytest pytest-cov pytest-mock coverage --group test
-
 pip_install_editable:  ## Install in editable mode
 	uv sync --all-groups
 	uv pip install --no-deps -e .
@@ -195,11 +189,20 @@ rsync_to_pi:	## Sync files to Raspberry Pi
 		--exclude='.pytest_cache' --exclude='.ruff_cache' \
 		--exclude='.vscode' --exclude='node_modules' --exclude='dist' --exclude='*.egg-info'
 
-pip_install_basic:  ## Install basic dependencies
+uv_add_dev_dependencies:  ## Add dev dependencies
+	uv add twine wheel build ruff pipdeptree pre-commit --group dev
+
+uv_add_test_dependencies:  ## Add test dependencies
+	uv add pytest pytest-cov pytest-mock coverage --group test
+
+uv_add_basic:  ## Install basic dependencies
 	uv add click pydantic rich toml sentry-sdk psutil setuptools
 
-pip_install_async:  ## Install async dependencies
+uv_add_async:  ## Install async dependencies
 	uv add aiomqtt httpx aiofiles
+
+uv_add_rpi:	## Install Raspberry Pi specific dependencies
+	uv add RPi.GPIO
 
 install_uv:	## Install uv
 	curl -LsSf https://astral.sh/uv/install.sh | sh

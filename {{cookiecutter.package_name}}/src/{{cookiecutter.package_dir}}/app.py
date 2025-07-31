@@ -60,18 +60,39 @@ class MyApp:
     # MQTT message handlers
     # --------------------------------------------------------------------------
 
-    async def handle_config(self, payload: dict) -> None:
+    async def handle_config(self, payload: dict, topic: str) -> None:
         """Handle incoming MQTT commands."""
         try:
             logger.info("Received config: %r", payload)
         except Exception:
             logger.exception("Error processing config: %r", payload)
 
-    async def handle_command(self, data: dict) -> None:
-        """Handle 'foo' command."""
+    async def handle_command(self, data: dict, topic: str) -> None:
+        """Handle 'action' command."""
+        action = data.get("action")
+        if not action:
+            logger.warning("No action specified in command data: %r", data)
+            return
+
         logger.info("Received command with data: %r", data)
-        # Schedule handler as independent task
-        task = asyncio.create_task(asyncio.sleep(data["sleep"]), name="command_handler")
+
+        # We expect 'action' to be in the data
+        if action == "foo":
+            await self.run_command_async(
+                asyncio.to_thread(self.command_foo, data=data), name="foo_action"
+            )
+        elif action == "bar":
+            await self.command_bar(data)
+        else:
+            logger.warning("Unknown command action: %s", action)
+
+    # --------------------------------------------------------------------------
+    # Commands
+    # --------------------------------------------------------------------------
+
+    async def run_command_async(self, couroutine, name: str) -> None:
+        """Run a command asynchronously."""
+        task = asyncio.create_task(couroutine, name=name)
         self._tasks.add(task)
 
         # Cleanup done tasks
@@ -81,6 +102,14 @@ class MyApp:
                 "Task completed: %r (name=%s)", t.result(), t.get_name()
             )
         )
+
+    async def command_bar(self, data: dict) -> None:
+        """Handle 'bar' command."""
+        logger.info("Executing 'bar' command with data: %r", data)
+
+    def command_foo(self, data: dict) -> None:
+        """Handle 'foo' command."""
+        logger.info("Executing 'foo' command with data: %r", data)
 
     # --------------------------------------------------------------------------
     # Stats
