@@ -40,7 +40,7 @@ env:  ## Create virtual environment (uses `uv`)
 env_remove:  ## Remove virtual environment
 	rm -rf .venv/
 
-env_recreate: env_remove env pip_install pip_install_editable  ## Recreate environment from scratch
+env_recreate: env_remove env pip_install_editable  ## Recreate environment from scratch
 
 # -----------------------------------------------------------------------------
 # Pip
@@ -53,11 +53,8 @@ pip_add_test_dependencies:  ## Add test dependencies
 	uv add pytest pytest-cov pytest-mock coverage --group test
 
 pip_install_editable:  ## Install in editable mode
-	uv pip install -e .
-	# uv sync --all-groups
-	pre-commit install
-
-pip_install_all:  pip_add_dev_dependencies pip_add_test_dependencies pip_install_editable ## Install all dependencies
+	uv sync --all-groups
+	uv pip install --no-deps -e .
 
 pip_list:  ## Run pip list
 	uv pip list
@@ -79,19 +76,19 @@ uv_lock_check:	## Check if lock file is up to date
 # -----------------------------------------------------------------------------
 
 pytest:  ## Run tests
-	uv run pytest -vx --cov --cov-report=html
+	pytest -vx --cov --cov-report=html
 
 pytest_verbose:  ## Run tests in verbose mode
-	uv run pytest -vvs --cov --cov-report=html
+	pytest -vvs --cov --cov-report=html
 
 coverage:  ## Run tests with coverage
-	uv run coverage run -m pytest && coverage html
+	coverage run -m pytest && coverage html
 
 coverage_verbose:  ## Run tests with coverage in verbose mode
-	uv run coverage run -m pytest -vss && coverage html
+	coverage run -m pytest -vss && coverage html
 
 coverage_skip:  ## Run tests with coverage and skip covered
-	uv run coverage run -m pytest -vs && coverage html --skip-covered
+	coverage run -m pytest -vs && coverage html --skip-covered
 
 open_coverage:  ## Open coverage report
 	open htmlcov/index.html
@@ -101,13 +98,13 @@ open_coverage:  ## Open coverage report
 # -----------------------------------------------------------------------------
 
 ruff_format: ## Run ruff format
-	uv run ruff format src/{{cookiecutter.package_dir}}
+	ruff format src/{{cookiecutter.package_dir}}
 
 ruff_check: ## Run ruff check
-	uv run ruff check src/{{cookiecutter.package_dir}}
+	ruff check src/{{cookiecutter.package_dir}}
 
 ruff_clean: ## Run ruff clean
-	uv run ruff clean
+	ruff clean
 
 # -----------------------------------------------------------------------------
 # Cleanup
@@ -187,14 +184,24 @@ dependency_urls: requirements_dependency pyproject_dependency ## Generate depend
 # Project Specific
 # -----------------------------------------------------------------------------
 
-# Add your project specific commands here
-
-pip_install: pip_install_all  ## Install all dependencies
-	uv add aiomqtt click pydantic rich toml sentry-sdk setuptools psutil httpx
+user=pi
+host=raspi3b-2.local
+remote_dir=/home/pi/Projects/CLIENT/APP
 
 rsync_to_pi:	## Sync files to Raspberry Pi
-	rsync -avz . pi@hostname.local:/home/pi/Projects/CLIENT/PROJECT/APP --delete \
+	rsync -avz . ${user}@${host}:${remote_dir} --delete \
 		--exclude=".DS_Store" --exclude='.git' --exclude='.venv' \
 		--exclude=".coverage" --exclude='htmlcov' --exclude='__pycache__' \
 		--exclude='.pytest_cache' --exclude='.ruff_cache' \
 		--exclude='.vscode' --exclude='node_modules' --exclude='dist' --exclude='*.egg-info'
+
+pip_install_basic:  ## Install basic dependencies
+	uv add click pydantic rich toml sentry-sdk psutil setuptools
+
+pip_install_async:  ## Install async dependencies
+	uv add aiomqtt httpx aiofiles
+
+install_uv:	## Install uv
+	curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Add your project specific commands here

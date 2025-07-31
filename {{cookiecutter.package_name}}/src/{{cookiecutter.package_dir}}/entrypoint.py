@@ -5,7 +5,7 @@ import sys
 
 from .app import MyApp
 
-logger = logging.getLogger("{{ cookiecutter.package_name }}")
+logger = logging.getLogger(__name__)
 
 
 def setup_windows_event_loop() -> None:
@@ -15,23 +15,16 @@ def setup_windows_event_loop() -> None:
         logger.debug("Set Windows Selector event loop policy")
 
 
-async def main() -> None:
+async def main(config) -> None:
     """Main entry point."""
-    app = MyApp()
+    app = MyApp(config)
     await app.run()
 
 
-def run():
+def run(config):
     """Run the application."""
     setup_windows_event_loop()
-
-    try:
-        asyncio.run(main())
-    except KeyboardInterrupt:
-        logger.info("Application interrupted by user")
-    except Exception:
-        logger.exception("Fatal error running application")
-        sys.exit(1)
+    asyncio.run(main(config))
 
 
 if __name__ == "__main__":

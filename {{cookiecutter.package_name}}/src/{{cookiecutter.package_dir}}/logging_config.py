@@ -1,52 +1,62 @@
 import logging
 import logging.handlers
+from pathlib import Path
 
 from rich.logging import RichHandler
 
-from .settings import LOG_FILE
 
+def setup_logger(
+    name: str,
+    log_file: Path,
+    console_level: str = "INFO",
+    file_level: str = "DEBUG",
+) -> None:
+    # Ensure the log directory exists
+    if not log_file.parent.exists():
+        log_file.parent.mkdir(parents=True, exist_ok=True)
+        log_file.touch(exist_ok=True)
 
-def setup_logger(name: str, level: str = "INFO") -> logging.Logger:
-    logger = logging.getLogger(name)
-    logger.setLevel(getattr(logging, level.upper(), logging.INFO))
-    logger.info("Setting up logger '%s' with level '%s'", name, level)
+    # Create root logger
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)
 
-    # Prevent propagation to root logger (to avoid other packages)
-    logger.propagate = False
+    # Remove any existing handlers
+    for handler in logger.handlers[:]:
+        logger.removeHandler(handler)
 
-    # If already configured, return as-is
-    if logger.hasHandlers():
-        logger.info("Logger '%s' already has handlers configured", name)
-        return logger
+    datefmt = "%Y-%m-%d %I:%M:%S %p"
 
     # Console handler
-    console_handler = RichHandler(rich_tracebacks=True, show_time=True, show_level=True)
-    # console_handler.setLevel(getattr(logging, level.upper(), logging.INFO))
-    # console_formatter = logging.Formatter("[%(name)s] %(message)s", "%Y-%m-%d %H:%M:%S")
-    # console_handler.setFormatter(console_formatter)
+    console_handler = RichHandler(
+        level=console_level.upper(),
+        markup=True,
+        rich_tracebacks=True,
+        tracebacks_show_locals=True,
+    )
+    console_formatter = logging.Formatter("%(message)s", datefmt=datefmt)
+    console_handler.setFormatter(console_formatter)
+    logger.addHandler(console_handler)
 
     # Rotating file handler
     file_handler = logging.handlers.RotatingFileHandler(
-        LOG_FILE,
+        log_file,
         maxBytes=10 * 1024 * 1024,  # 10 MB
         backupCount=5,
     )
-    # file_handler.setLevel(getattr(logging, level.upper(), logging.INFO))
+    file_handler.setLevel(file_level)
     file_formatter = logging.Formatter(
         "[%(asctime)s] [%(levelname)s] [%(name)s] %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
+        datefmt=datefmt,
     )
     file_handler.setFormatter(file_formatter)
-
-    logger.addHandler(console_handler)
     logger.addHandler(file_handler)
 
-    return logger
+    # Set up package logger
+    package_logger = logging.getLogger(name)
+    package_logger.setLevel(logging.DEBUG)
 
-
-def get_logger(name: str) -> logging.Logger:
-    """Get the logger instance, setting it up if not already configured."""
-    logger = logging.getLogger(name)
-    if not logger.hasHandlers():
-        setup_logger(name)
-    return logger
+    # Adjust logging levels for noisy libraries
+    logging.getLogger("urllib3").setLevel(logging.WARNING)
+    logging.getLogger("matplotlib").setLevel(logging.WARNING)
+    logging.getLogger("asyncio").setLevel(logging.WARNING)
+    logging.getLogger("pygame").setLevel(logging.ERROR)

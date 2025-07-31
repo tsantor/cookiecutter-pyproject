@@ -1,11 +1,11 @@
 import asyncio
 import logging
-from contextlib import asynccontextmanager
 
 from .mqtt import client
 from .services.heartbeat import HeartbeatService
-from .settings import mqtt_config
+from .settings import SETTINGS_DIR, Settings
 from .shutdown import ShutdownManager
+from .stats import StatsTracker
 
 logger = logging.getLogger("{{cookiecutter.package_name}}")
 
@@ -13,85 +13,65 @@ logger = logging.getLogger("{{cookiecutter.package_name}}")
 class MyApp:
     """Main application."""
 
-    def __init__(self):
-        self.mqtt: client.AsyncMqttClient | None = None
+    def __init__(self, config: Settings):
+        self.config = config
+        self._mqtt: client.AsyncMqttClient | None = None
         self._tasks: set[asyncio.Task] = set()
-        self._shutdown = ShutdownManager()
+        self._heartbeat: HeartbeatService | None = None
 
-        self.device_id = mqtt_config.device_id
-        self.base_topic = f"client/project/{mqtt_config.device_id}"
-
-        # Services
-        self.heartbeat: HeartbeatService | None = None
+        self._stats = StatsTracker(
+            stats_file=SETTINGS_DIR / "stats.json", save_interval=10.0
+        )
 
     async def setup_mqtt(self) -> None:
         """Initialize and configure MQTT client."""
-        self.mqtt = client.AsyncMqttClient(
-            base_topic=self.base_topic,
-            hostname=mqtt_config.host,
-            port=mqtt_config.port,
-            identifier=self.device_id,
-            username=mqtt_config.username,
-            password=mqtt_config.password,
-            keep_alive=mqtt_config.keep_alive,
-            logger=logger,
+        self._mqtt = client.AsyncMqttClient(
+            base_topic=f"project/app/{self.config.mqtt.device_id}",
+            hostname=self.config.mqtt.host,
+            port=self.config.mqtt.port,
+            identifier=self.config.mqtt.device_id,
+            username=self.config.mqtt.username,
+            password=self.config.mqtt.password,
+            keep_alive=self.config.mqtt.keep_alive,
         )
 
-        await self.mqtt.connect()
+        # Setup MQTT topics
+        config_topic = self._mqtt.build_topic("config")
+        command_topic = self._mqtt.build_topic("command")
 
-        # Add message handlers (TODO: Put into a service)
+        # Subscribe to topics
+        subscriptions = [
+            (config_topic, 1),
+            (command_topic, 1),
+        ]
+        await self._mqtt.add_subscriptions(subscriptions)
+
+        # Add message handlers
         message_handlers = {
-            f"{self.base_topic}/config": self.handle_config,
-            f"{self.base_topic}/command": self.handle_command,
+            config_topic: self.handle_config,
+            command_topic: self.handle_command,
         }
-        self.mqtt.add_message_handlers(message_handlers)
+        self._mqtt.add_message_handlers(message_handlers)
+
+        await self._mqtt.connect()
+        await self._mqtt.connected_event.wait()
+
+    # --------------------------------------------------------------------------
+    # MQTT message handlers
+    # --------------------------------------------------------------------------
 
     async def handle_config(self, payload: dict) -> None:
         """Handle incoming MQTT commands."""
         try:
             logger.info("Received config: %r", payload)
-            # Add your command processing logic here
-
         except Exception:
             logger.exception("Error processing config: %r", payload)
 
-    async def handle_command(self, payload: dict) -> None:
-        try:
-            logger.debug("-" * 40)
-            logger.info("Received command: %r", payload)
-            action = payload.get("action")
-            data = payload.get("data", {})
-
-            # Map actions to handler methods
-            action_map = {
-                "recalibrate": lambda: self.on_recalibrate(data),
-                "foo": lambda: self.on_foo(data),
-            }
-
-            handler = action_map.get(action)
-            if handler:
-                await handler()
-            else:
-                logger.warning("Unknown action: %r", action)
-        except Exception:
-            logger.exception("Error processing command: %r", payload)
-
-    # --------------------------------------------------------------------------
-    # App specific commands
-    # --------------------------------------------------------------------------
-
-    async def on_recalibrate(self, data: dict) -> None:
-        """Handle recalibration command."""
-        logger.info("Recalibration requested")
-        # Implement recalibration logic here
-        await asyncio.sleep(2)  # Simulate recalibration delay
-        logger.info("Recalibration complete")
-
-    async def on_foo(self, data: dict) -> None:
+    async def handle_command(self, data: dict) -> None:
         """Handle 'foo' command."""
-        logger.info("Received 'foo' command with data: %r", data)
+        logger.info("Received command with data: %r", data)
         # Schedule handler as independent task
-        task = asyncio.create_task(asyncio.sleep(data["sleep"]), name="foo_handler")
+        task = asyncio.create_task(asyncio.sleep(data["sleep"]), name="command_handler")
         self._tasks.add(task)
 
         # Cleanup done tasks
@@ -103,28 +83,83 @@ class MyApp:
         )
 
     # --------------------------------------------------------------------------
+    # Stats
+    # --------------------------------------------------------------------------
+
+    def get_stats(self) -> dict:
+        """Get stats."""
+        # return self._monitor.get_stats()
+        return {}
+
+    def restore_stats(self) -> None:
+        """Restore sensor stats from saved data."""
+        # saved_stats = self._stats.all().get("sensors", {})
+        # self._monitor.restore_stats(saved_stats)
+        logger.debug("TODO: Implement restore_stats")
+
+    async def setup_stats(self) -> None:
+        """Initialize and configure stats tracker."""
+        self._stats.register_source("foo", self.get_stats)
+        await self._stats.start()
+        # logger.debug("TODO: Implement setup_stats")
+
+    # --------------------------------------------------------------------------
+    # App lifecycle management
+    # --------------------------------------------------------------------------
+
+    async def start_background_tasks(self) -> None:
+        """Start all background tasks."""
+        # self._monitor = BreakBeamMonitor(
+        #     mqtt=self._mqtt,
+        #     sensor_config=self.config.sensor,
+        #     sound=self.config.app.sound,
+        # )
+        # self._tasks.add(
+        #     asyncio.create_task(
+        #         self._monitor.start(),
+        #         name="monitor",
+        #     )
+        # )
+
+        # Start heartbeat service (should be last to start)
+        self._heartbeat = HeartbeatService(mqtt=self._mqtt)
+        self._tasks.add(
+            asyncio.create_task(
+                self._heartbeat.run(),
+                name="heartbeat",
+            )
+        )
+
+        # self._heartbeat.register_source("health", get_health_info)
+
+    async def shutdown_services(self) -> None:
+        """Shutdown all services gracefully."""
+        logger.info("-" * 40)
+
+        if self._mqtt:
+            await self._mqtt.disconnect()
+
+        if self._heartbeat:
+            await self._heartbeat.stop()
+
+        # if self._monitor:
+        #     await self._monitor.stop()
+
+        if self._stats:
+            await self._stats.stop()
 
     async def run(self):
-        self._shutdown.install()
+        """Run the main application loop."""
+        shutdown = ShutdownManager()
+        shutdown.install()
+
         try:
             await self.setup_mqtt()
-            await self.mqtt.connected_event.wait()
-
-            def heartbeat_payload():
-                return {
-                    "timestamp": asyncio.get_event_loop().time(),
-                    # Add more here as needed
-                }
-
-            self.heartbeat = HeartbeatService(
-                mqtt=self.mqtt,
-                base_topic=self.base_topic,
-                payload_func=heartbeat_payload,
-            )
-            self._tasks.add(asyncio.create_task(self.heartbeat.run()))
-
-            await self._shutdown.wait()
-
+            await self.start_background_tasks()
+            await self.setup_stats()
+            self.restore_stats()
+            await shutdown.wait()
+            await self.shutdown_services()
         except Exception:
             logger.exception("Error in main loop")
             raise
@@ -133,15 +168,25 @@ class MyApp:
 
     async def cleanup(self) -> None:
         """Cleanup resources."""
-        logger.info("Starting cleanup...")
-        if hasattr(self, "heartbeat"):
-            self.heartbeat.shutdown()
-
         logger.info(
-            "Waiting for %d running tasks to finish…",
+            "Waiting for %d running tasks to finish...",
             len(self._tasks),
         )
-        await asyncio.gather(*self._tasks, return_exceptions=True)
-        if self.mqtt:
-            await self.mqtt.disconnect()
-        logger.info("All tasks complete. Shutting down cleanly.")
+        for task in self._tasks:
+            logger.debug("Running task: '%s'", task.get_name())
+
+        try:
+            results = await asyncio.wait_for(
+                asyncio.gather(*self._tasks, return_exceptions=True),
+                timeout=5,
+            )
+            for task, result in zip(self._tasks, results, strict=True):
+                if isinstance(result, Exception):
+                    logger.error(
+                        "Task '%s' raised an exception: %s",
+                        task.get_name(),
+                        result,
+                    )
+            logger.info("All tasks complete. Shutting down cleanly.")
+        except TimeoutError:
+            logger.warning("Tasks did not complete within timeout")

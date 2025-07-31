@@ -3,7 +3,7 @@ import logging
 import signal
 import sys
 
-logger = logging.getLogger("playdoh-rfid")
+logger = logging.getLogger(__name__)
 
 
 class ShutdownManager:

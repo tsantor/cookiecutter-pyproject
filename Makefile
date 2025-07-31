@@ -108,3 +108,6 @@ tree:  ## Show directory tree
 	tree -I 'build|dist|htmlcov|node_modules|migrations|contrib|__pycache__|*.egg-info|staticfiles|media|my-python-package'
 
 # -----------------------------------------------------------------------------
+
+git_size:  ## Show git repository size
+	git count-objects -vH

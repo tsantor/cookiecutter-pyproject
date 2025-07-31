@@ -14,7 +14,8 @@ class AppConfig(BaseModel):
     def expand_user_paths(cls, v):  # noqa: N805
         return Path(v).expanduser() if v else None
 
-
+{%- if cookiecutter.use_sentry == "y" %}
 class SentryConfig(BaseModel):
     dsn: str | None = None
     environment: str = "production"
+{%- endif %}

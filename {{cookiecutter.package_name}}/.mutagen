@@ -1,0 +1,10 @@
+sync:
+  ignore:
+    - __pycache__
+    - .coverage
+    - .git
+    - .ruff_cache
+    - .venv
+    - htmlcov
+    - node_modules
+  one_way: true
